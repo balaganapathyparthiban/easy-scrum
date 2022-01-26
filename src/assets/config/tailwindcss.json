@@ -1,0 +1,7 @@
+{
+  "screens": {
+    "mobile": { "min": "320px", "max": "767px" },
+    "tablet": { "min": "768px", "max": "1023px" },
+    "computer": { "min": "1024px", "max": "1536px" }
+  }
+}

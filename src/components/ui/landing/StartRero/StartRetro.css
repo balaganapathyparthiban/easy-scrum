@@ -1,0 +1,9 @@
+.customCheckboxYellow input:checked + div {
+  @apply bg-yellow-400;
+}
+.customCheckboxBlue input:checked + div {
+  @apply bg-blue-400;
+}
+.customCheckbox input:checked + div svg {
+  @apply block;
+}
