@@ -40,7 +40,7 @@ const SlideUpModal = ({
       >
         {visible ? (
           <div className="w-full h-full flex flex-col">
-            <div className="w-full h-auto flex flex-row justify-between items-center px-6 py-8">
+            <div className="w-full h-auto flex flex-row justify-between items-center px-6 mobile:px-4 py-8 mobile:py-4">
               <div className="w-auto h-auto">{header}</div>
               <div>
                 <VscChromeClose fontSize={26} onClick={toggleModal} />

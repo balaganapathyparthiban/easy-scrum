@@ -15,7 +15,7 @@ const Button = ({
 }) => {
   return (
     <div
-      className={`inline-flex flex-row items-center justify-center rounded shadow px-4 py-2 cursor-pointer font-medium ${className}`}
+      className={`inline-flex flex-row items-center justify-center rounded shadow px-4 py-2 mobile:py-2 mobile:px-2 cursor-pointer font-medium ${className}`}
       style={{
         width: fullWidth ? '100%' : 'auto',
         height: fullHeight ? '100%' : 'auto',

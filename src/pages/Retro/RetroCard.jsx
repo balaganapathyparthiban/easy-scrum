@@ -19,19 +19,22 @@ const RetroCard = ({
   addLikeTemplateList,
   deleteTemplateList,
   cancelEditTemplateList,
+  cancelTemplateList,
   inputValues,
   users,
 }) => {
   return (
-    <div className="w-1/3 h-full flex flex-col border rounded p-2 mx-1">
-      <p className="text-lg opacity-50">{template.name}</p>
-      <div
-        className="w-full h-8 bg-gray-200 rounded mt-2 mb-2 flex flex-row justify-center items-center cursor-pointer"
-        onClick={addNewTemplateList}
-      >
-        <IoMdAdd className="opacity-50" />
+    <div className="w-1/3 mobile:w-full h-full flex flex-col border rounded p-2 mx-1 overflow-hidden">
+      <div className='w-full h-auto flex flex-col mobile:flex-row item-center mobile:justify-between'>
+        <p className="text-lg mobile:text-sm mobile:text-center flex flex-row items-center opacity-50">{template.name}</p>
+        <div
+          className="w-full mobile:w-8 h-8 bg-gray-200 rounded mt-2 mb-2 mobile:my-0 flex flex-row justify-center items-center cursor-pointer"
+          onClick={addNewTemplateList}
+        >
+          <IoMdAdd className="opacity-50" />
+        </div>
       </div>
-      <div className="w-full h-[calc(100%-50px)] overflow-x-hidden overflow-y-auto">
+      <div className="w-full h-[calc(100%-50px)] mobile:h-[calc(100%-32px)] overflow-x-hidden overflow-y-auto">
         {template.list.map((tl, index) => (
           <>
             {tl.status === CONST.RETRO_STATUS_DELETE ? null : (
@@ -90,15 +93,23 @@ const RetroCard = ({
                         ) : null}
                       </>
                     ) : (
-                      <div
-                        className="text-gray-800 mx-1 cursor-pointer"
-                        onClick={() => submitNewTemplateList(index, tl.status)}
-                      >
-                        <GoCheck fontSize={20} />
-                      </div>
+                      <>
+                        <div
+                          className="text-gray-800 mx-1 cursor-pointer"
+                          onClick={() => submitNewTemplateList(index, tl.status)}
+                        >
+                          <GoCheck fontSize={20} />
+                        </div>
+                        <div
+                          className="text-gray-800 ml-1 cursor-pointer"
+                          onClick={() => cancelTemplateList(index)}
+                        >
+                          <FaTimes fontSize={20} />
+                        </div>
+                      </>
                     )}
                     {tl.userId === localStorage.getItem(CONST.USER_ID) &&
-                    tl.status === CONST.RETRO_STATUS_NONE ? (
+                      tl.status === CONST.RETRO_STATUS_NONE ? (
                       <div
                         className="text-gray-800 ml-1 cursor-pointer"
                         onClick={() => deleteTemplateList(index)}
@@ -107,7 +118,7 @@ const RetroCard = ({
                       </div>
                     ) : null}
                     {tl.userId === localStorage.getItem(CONST.USER_ID) &&
-                    tl.status === CONST.RETRO_STATUS_EDIT ? (
+                      tl.status === CONST.RETRO_STATUS_EDIT ? (
                       <div
                         className="text-gray-800 ml-1 cursor-pointer"
                         onClick={() => cancelEditTemplateList(index)}
@@ -136,6 +147,7 @@ RetroCard.propTypes = {
   submitNewTemplateList: PropTypes.func,
   deleteTemplateList: PropTypes.func,
   cancelEditTemplateList: PropTypes.func,
+  cancelTemplateList: PropTypes.func,
   addLikeTemplateList: PropTypes.func,
   users: PropTypes.object,
 }

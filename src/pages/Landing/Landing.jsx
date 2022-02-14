@@ -22,35 +22,35 @@ const Landing = () => {
 
   return (
     <div className="w-full h-full flex flex-col justify-end text-white overflow-hidden">
-      <div className="absolute w-full h-auto top-0 z-10">
+      <div className="absolute w-full h-16 mobile:h-12 tablet:h-12 top-0 z-10">
         <Header />
       </div>
-      <div className="absolute top-0 w-full h-full flex flex-row mobile:flex-col">
+      <div className="absolute top-0 w-full h-full flex flex-row mobile:flex-col overflow-hidden">
         <motion.div
           initial={{ width: isMobile ? '100%' : '50%' }}
           animate={{ width: isMobile ? '100%' : '50%' }}
-          whileHover={{ width: '85%' }}
+          whileHover={{ width: isMobile ? '100%' : '85%' }}
           transition={{ ease: 'easeInOut', type: 'spring', stiffness: 75 }}
-          className="flex-grow h-full mobile:w-full mobile:h-1/2 bg-blue-500 px-4 py-16"
+          className="tablet:flex-grow h-full mobile:w-full mobile:h-1/2 bg-blue-500 px-4 py-16 mobile:pt-14 tablet:pt-14 mobile:pb-4"
         >
-          <div className="w-full h-full flex flex-col px-6 pt-12 pb-6 mobile:py-2">
+          <div className="w-full h-full flex flex-col px-6 mobile:px-0 pt-12 pb-6 mobile:py-0 tablet:pt-4 tablet:pb-0">
             <div className="w-full opacity-75">
-              <p className="text-4xl mobile:text-2xl">Sprint planning</p>
+              <p className="text-4xl mobile:text-xl tablet:text-2xl">Sprint planning</p>
             </div>
-            <div className="w-full mt-4">
-              <p className="text-6xl mobile:text-3xl">
+            <div className="w-full mt-4 mobile:mt-2">
+              <p className="text-5xl mobile:text-2xl tablet:text-4xl">
                 Sprints made simple. Estimates made easy.
               </p>
             </div>
-            <div className="w-3/4 mt-4 opacity-75">
-              <p>
+            <div className="w-3/4 mobile:w-full mt-4 mobile:mt-2 opacity-75">
+              <p className='mobile:text-base'>
                 It is the fun way for agile teams to guide sprint planning and
                 build accurate consensus estimates.
               </p>
             </div>
-            <div className="w-full mt-6">
+            <div className="w-full mt-6 mobile:mt-2">
               <SlideUpModal
-                action={<Button textColorWeight="600">START PLANNING</Button>}
+                action={<Button textColorWeight="600" className='text-xs'>START PLANNING</Button>}
                 header={<Logo color="blue" colorWeight="400" />}
               >
                 <StartPlanning />
@@ -61,29 +61,29 @@ const Landing = () => {
         <motion.div
           initial={{ width: isMobile ? '100%' : '50%' }}
           animate={{ width: isMobile ? '100%' : '50%' }}
-          whileHover={{ width: '85%' }}
+          whileHover={{ width: isMobile ? '100%' : '85%' }}
           transition={{ ease: 'easeInOut', type: 'spring', stiffness: 75 }}
-          className="flex-grow h-full mobile:w-full mobile:h-1/2 bg-yellow-500 px-4 py-16 mobile:py-4"
+          className="tablet:flex-grow h-full mobile:w-full mobile:h-1/2 bg-yellow-500 px-4 py-16 tablet:pt-14 mobile:py-4"
         >
-          <div className="w-full h-full flex flex-col px-6 pt-12 pb-6 mobile:py-2">
+          <div className="w-full h-full flex flex-col px-6 mobile:px-0 pt-12 pb-6 mobile:py-0 tablet:pt-4 tablet:pb-0">
             <div className="w-full opacity-75">
-              <p className="text-4xl mobile:text-3xl">Sprint retrospective</p>
+              <p className="text-4xl mobile:text-xl tablet:text-2xl">Sprint retrospective</p>
             </div>
-            <div className="w-full mt-4">
-              <p className="text-6xl mobile:text-3xl">
+            <div className="w-full mt-4 mobile:mt-2">
+              <p className="text-5xl mobile:text-2xl tablet:text-4xl">
                 Improve with Fun Sprint Retro.
               </p>
             </div>
-            <div className="w-3/4 mt-4 opacity-75">
-              <p>
+            <div className="w-3/4 mobile:w-full mt-4 mobile:mt-2 opacity-75">
+              <p className='mobile:text-base'>
                 Collaborate with your remote team and get better at what you do
                 with a simple, intuitive and beautiful tool.
               </p>
             </div>
-            <div className="w-full mt-6">
+            <div className="w-full mt-6 mobile:mt-2">
               <SlideUpModal
                 action={
-                  <Button textColor="yellow" textColorWeight="600">
+                  <Button textColor="yellow" textColorWeight="600" className='text-xs'>
                     START RETROSPECTIVE
                   </Button>
                 }

@@ -12,7 +12,7 @@ const Logo = ({ color = 'white', colorWeight = null, logoTitle = '' }) => {
       }}
     >
       <RiVipCrownFill className="-translate-y-0.5" fontSize={30} />
-      <p className="ml-1 text-2xl font-bold capitalize">
+      <p className="ml-1 text-2xl font-bold capitalize mobile:hidden">
         {logoTitle.length === 0 ? 'Easy Scrum' : logoTitle}
       </p>
     </div>

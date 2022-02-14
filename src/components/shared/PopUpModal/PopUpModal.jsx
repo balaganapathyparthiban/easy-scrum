@@ -9,7 +9,7 @@ const PopUpModal = ({
   header,
   showModal = false,
   disableAction = false,
-  actionHandler = () => {},
+  actionHandler = () => { },
 }) => {
   const [visible, setVisible] = useState(showModal)
 
@@ -29,7 +29,7 @@ const PopUpModal = ({
         </div>
       )}
       <motion.div
-        className="absolute top-0 left-0 right-0 w-screen z-50 flex flex-col justify-center items-center"
+        className="absolute top-0 left-0 right-0 w-screen z-50 mobile:px-4 flex flex-col justify-center items-center"
         style={{ backgroundColor: '#25252550', height: visible ? '100vh' : 0 }}
         initial={{ opacity: 0 }}
         animate={{
@@ -39,7 +39,7 @@ const PopUpModal = ({
       >
         {visible ? (
           <>
-            <div className="w-96 h-auto max-w-md max-h-80 pb-6 bg-white text-gray-800 overflow-hidden rounded shadow flex flex-col">
+            <div className="w-96 mobile:w-full h-auto max-w-md max-h-80 pb-6 bg-white text-gray-800 overflow-hidden rounded shadow flex flex-col">
               <div className="w-full h-auto flex flex-row justify-between items-center p-4">
                 <div className="w-auto h-auto">{header}</div>
                 <div>

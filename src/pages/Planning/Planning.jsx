@@ -96,7 +96,7 @@ const Planning = () => {
         if (!response) return
 
         const data = await SEA.decrypt(response, hash)
-        console.log(data)
+
         setPlanningData(data)
       })
 
@@ -258,7 +258,7 @@ const Planning = () => {
 
   return (
     <>
-      <div className="w-full h-auto flex flex-row justify-between items-center px-6 pt-8 pb-6 outline-none">
+      <div className="w-full h-auto flex flex-row justify-between items-center px-6 pt-8 pb-6 mobile:p-4 tablet:p-4 outline-none">
         <div className="flex flex-row justify-center items-center">
           <Link to={CONST.LANDING}>
             <Logo
@@ -271,12 +271,12 @@ const Planning = () => {
             <SlideUpModal
               showSlideUpModal={showSlideUpModal}
               action={
-                <FiSettings fontSize="24" className="ml-4 text-gray-800" />
+                <FiSettings fontSize="24" className="mobile:text-xl ml-4 text-gray-800" />
               }
               actionHandler={(data) => {
                 setShowSlideUpModal(data)
               }}
-              header={<p className="text-2xl">Update planning settings</p>}
+              header={<Logo color="blue" colorWeight="400" />}
             >
               <StartPlanning
                 submitText="UPDATE"
@@ -289,9 +289,9 @@ const Planning = () => {
           ) : null}
         </div>
         <div className="flex flex-row items-center">
-          <div className="flex flex-row mr-4 items-center">
+          <div className="flex flex-row mr-4 mobile:mr-2 items-center">
             <div
-              className="flex flex-row items-center relative hover:bg-gray-100 focus:bg-gray-100 p-2 rounded outline-none"
+              className="flex flex-row items-center relative hover:bg-gray-100 focus:bg-gray-100 p-2 mobile:p-0 mobile:ml-2 rounded outline-none"
               onClick={() => setShowDropDown(!showDropDown)}
               tabIndex="-1"
               onBlur={() => setShowDropDown(false)}
@@ -299,11 +299,11 @@ const Planning = () => {
               <p className="uppercase text-sm rounded-full bg-blue-400 w-7 h-7 flex flex-row justify-center items-center mr-2 text-white">
                 {userName[0]}
               </p>
-              <p className="cursor-pointer mr-2 capitalize">{userName}</p>
+              <p className="cursor-pointer mr-2 capitalize mobile:hidden">{userName}</p>
               <VscChevronDown className="cursor-pointer" strokeWidth={2} />
               {showDropDown ? (
                 <>
-                  <div className="w-56 h-56 rounded shadow-lg bg-white absolute top-14 right-0 z-10 border">
+                  <div className="w-56 h-56 rounded shadow-lg bg-white absolute top-14 mobile:top-8 right-0 mobile:-right-16 z-10 border">
                     <div className="w-full h-auto flex flex-row p-2">
                       <p className="flex flex-row justify-center items-center text-xl uppercase rounded-full bg-blue-400 w-12 h-12 mr-2 text-white">
                         {userName[0]}
@@ -341,15 +341,16 @@ const Planning = () => {
               readOnly
             />
             <Button bgColor="blue" bgColorWeight="400" textColor="white">
-              <FiShare2 fontSize="20" className="mr-2 relative" /> Copy link
+              <FiShare2 fontSize="20" className="text-base mr-2 relative" />
+              <span className='mobile:text-xs'>Copy link</span>
             </Button>
           </div>
         </div>
       </div>
-      <div className="w-full h-[calc(100vh-96px)] px-6 pb-6 flex flex-row">
-        <div className="w-3/4 h-full flex flex-col justify-between">
+      <div className="w-full h-[calc(100vh-96px)] mobile:h-[calc(100vh-64px)] tablet:h-[calc(100vh-76px)] px-6 mobile:px-4 tablet:px-4 pb-6 mobile:pb-4 tablet:pb-4 flex flex-row mobile:flex-col-reverse mobile:justify-start">
+        <div className="w-3/4 mobile:w-full h-full mobile:h-3/4 mobile:mt-2 flex flex-col justify-between">
           <div
-            className="w-full h-3/4 grid grid-cols-4 gap-4 border-2 border-blue-400 rounded shadow p-2 overflow-x-hidden overflow-y-scroll relative"
+            className="w-full h-3/4 mobile:h-4/5 grid grid-cols-4 mobile:grid-cols-2 tablet:grid-cols-3 gap-4 mobile:gap-1 border-2 border-blue-400 rounded shadow p-2 overflow-x-hidden overflow-y-scroll relative"
             style={{ gridAutoRows: '100px' }}
           >
             {Object.keys(users).length > 0 ? (
@@ -359,20 +360,20 @@ const Planning = () => {
                   className="w-auto h-16 border rounded shadow flex flex-row relative"
                 >
                   <div
-                    className="w-1/5 flex flex-row justify-center items-center rounded m-px"
+                    className="w-1/5 mobile:w-1/4 flex flex-row justify-center items-center rounded m-px"
                     style={{
                       background: user.vote
                         ? colors['blue']['400']
                         : colors['gray']['200'],
                     }}
                   >
-                    <p className="font-bold text-3xl text-white break-words">
+                    <p className="font-bold text-3xl mobile:text-lg text-white break-words">
                       {user.vote && planningData.showVoting ? user.vote : null}
                     </p>
                   </div>
-                  <div className="w-4/5 flex flex-col p-2">
-                    <p className="capitalize">{user.name}</p>
-                    <p className="opacity-50 text-sm">
+                  <div className="w-4/5 mobile:w-3/4 flex flex-col p-2">
+                    <p className="capitalize mobile:text-xs">{user.name}</p>
+                    <p className="opacity-50 text-sm mobile:text-xs">
                       {user.isSpectator ? 'Spectator' : 'Participant'}
                     </p>
                   </div>
@@ -384,13 +385,13 @@ const Planning = () => {
               </div>
             )}
           </div>
-          <div className="w-full h-1/4 flex flex-row justify-evenly items-center gap-2 pt-4 relative">
+          <div className="w-full h-1/4 mobile:h-1/5 flex flex-row justify-evenly items-center gap-2 mobile:gap-0 pt-4 relative">
             {isSpectator ? (
               <div
                 className="rounded z-10 absolute top-4 left-0 right-0 w-full opacity-80 bg-gray-200 flex flex-row justify-center items-center"
                 style={{ height: '90%' }}
               >
-                <p className="font-bold">
+                <p className="font-bold mobile:text-sm mobile:text-center">
                   You are in spectator mode,{' '}
                   <span
                     className="cursor-pointer text-blue-400"
@@ -406,19 +407,19 @@ const Planning = () => {
               planningData.votingSystem.map((v, i) => (
                 <div
                   key={i}
-                  className="w-20 h-full rounded shadow bg-white border-2 border-blue-400 flex flex-row justify-center items-center hover:-translate-y-2 hover:bg-blue-50 text-blue-400 font-bold cursor-pointer"
+                  className="w-20 mobile:w-auto h-full mobile:px-1 mobile:py-1 mobile:text-xs rounded shadow bg-white border-2 border-blue-400 flex flex-row justify-center items-center hover:-translate-y-2 hover:bg-blue-50 text-blue-400 font-bold cursor-pointer"
                   style={
                     isVoted === v.name
                       ? {
-                          transform: 'translateY(-0.5rem)',
-                          background: colors['blue']['50'],
-                        }
+                        transform: 'translateY(-0.5rem)',
+                        background: colors['blue']['50'],
+                      }
                       : planningData.showVoting
-                      ? {
+                        ? {
                           transform: 'translateY(0)',
                           background: 'transparent',
                         }
-                      : {}
+                        : {}
                   }
                   onClick={() => selectVote(v)}
                 >
@@ -427,102 +428,108 @@ const Planning = () => {
               ))}
           </div>
         </div>
-        <div className="w-1/4 h-full flex flex-col pl-4">
+        <div className="w-1/4 mobile:w-full h-full mobile:h-1/4 flex flex-col mobile:flex-col-reverse pl-4 mobile:pl-0 tablet:pl-2">
           {role === CONST.ADMIN ? (
-            <div className="flex flex-row mb-4">
-              <div className="mr-2">
+            <div className="w-full flex flex-row items-center mobile:justify-center mb-4 mobile:mb-0">
+              <div className="w-1/2 mr-2 tablet:mr-1 mobile:w-1/2">
                 <Button
                   bgColor="yellow"
                   bgColorWeight="400"
                   textColor="white"
                   onClick={onVotingReset}
+                  fullWidth={true}
+                  className='mobile:text-xs tablet:text-sm'
                 >
-                  <MdRefresh className="mr-2" fontSize={24} /> Reset voting
+                  <MdRefresh className="mr-2" fontSize={16} className="mobile:text-lg" /> Reset
                 </Button>
               </div>
-              <div className="ml-2">
+              <div className="w-1/2 ml-2 tablet:ml-1 mobile:w-1/2">
                 <Button
                   bgColor="green"
                   bgColorWeight="400"
                   textColor="white"
                   onClick={onShowVoting}
+                  fullWidth={true}
+                  className='mobile:text-xs tablet:text-sm'
                 >
-                  <VscEye className="mr-2" fontSize={16} /> Show voting
+                  <VscEye className="mr-2" fontSize={16} /> Show
                 </Button>
               </div>
             </div>
           ) : null}
-          <div className="w-full h-auto rounded shadow border-2 border-blue-400 p-4">
+          <div className="w-full h-auto rounded shadow border-2 border-blue-400 p-4 mobile:p-2 tablet:px-0.5 tablet:py-2 mobile:mb-2 mobile:overflow-y-auto">
             <div className="flex flex-row justify-between">
               <div className="w-1/3 h-auto flex flex-col justify-center items-center">
                 <div>
-                  <FaUsers fontSize={20} />
+                  <FaUsers fontSize={20} className='mobile:text-lg tablet:text-lg' />
                 </div>
                 <div>
-                  <p className="text-xl font-bold">{result.totalPaticipants}</p>
+                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">{result.totalPaticipants}</p>
                 </div>
                 <div>
-                  <p className="text-xs opacity-50">Participant's</p>
-                </div>
-              </div>
-              <div className="w-1/3 h-auto flex flex-col justify-center items-center">
-                <div>
-                  <FaEye fontSize={20} />
-                </div>
-                <div>
-                  <p className="text-xl font-bold">{result.totalSpectators}</p>
-                </div>
-                <div>
-                  <p className="text-xs opacity-50">Spectator's</p>
+                  <p className="text-xs tablet:text-[10px] opacity-50">Participant's</p>
                 </div>
               </div>
               <div className="w-1/3 h-auto flex flex-col justify-center items-center">
                 <div>
-                  <FaVoteYea fontSize={20} />
+                  <FaEye fontSize={20} className='mobile:text-lg tablet:text-lg' />
                 </div>
                 <div>
-                  <p className="text-xl font-bold">{result.totalVotes}</p>
+                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">{result.totalSpectators}</p>
                 </div>
                 <div>
-                  <p className="text-xs opacity-50">Vote's</p>
+                  <p className="text-xs tablet:text-[10px] opacity-50">Spectator's</p>
+                </div>
+              </div>
+              <div className="w-1/3 h-auto flex flex-col justify-center items-center">
+                <div>
+                  <FaVoteYea fontSize={20} className='mobile:text-lg tablet:text-lg' />
+                </div>
+                <div>
+                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">{result.totalVotes}</p>
+                </div>
+                <div>
+                  <p className="text-xs tablet:text-[10px] opacity-50">Vote's</p>
                 </div>
               </div>
             </div>
             {result.votingMap && planningData.showVoting
               ? Object.keys(result.votingMap)
-                  .sort((a, b) => {
-                    if (parseFloat(a) > parseFloat(b)) return 1
-                    if (parseFloat(a) < parseFloat(b)) return -1
-                    if (parseFloat(a) == parseFloat(b)) {
-                      return 0
-                    }
-                  })
-                  .map((voting) => (
-                    <div
-                      key={voting}
-                      className="flex flex-row items-center justify-evenly mt-4"
-                    >
-                      <div className="w-8 h-10 border-2 border-blue-400 rounded flex flex-row justify-center items-center">
-                        <p className="text-blue-400">
-                          {voting === 'null' ? 'nil' : voting}
-                        </p>
-                      </div>
-                      <div
-                        className="w-4/5 h-2 bg-gray-200 rounded"
-                        style={{
-                          background: `linear-gradient(90deg, ${
-                            colors['blue']['400']
-                          } 0% ${
-                            (result.votingMap[voting] /
-                              (result.totalVotes === 0
-                                ? 1
-                                : result.totalVotes)) *
-                            100
-                          }%, ${colors['gray']['200']} 0% 100%)`,
-                        }}
-                      ></div>
-                    </div>
-                  ))
+                .sort((a, b) => {
+                  if (parseFloat(a) > parseFloat(b)) return 1
+                  if (parseFloat(a) < parseFloat(b)) return -1
+                  if (parseFloat(a) == parseFloat(b)) {
+                    return 0
+                  }
+                })
+                .map((voting) => (
+                  <div
+                    key={voting}
+                    className="flex flex-row items-center justify-evenly mt-4 mobile:mt-2"
+                  >
+                    {voting !== 'null' ? (
+                      <>
+                        <div className="w-8 h-10 border-2 border-blue-400 rounded flex flex-row justify-center items-center">
+                          <p className="text-blue-400">
+                            {voting}
+                          </p>
+                        </div>
+                        <div
+                          className="w-4/5 h-2 ml-2 bg-gray-200 rounded"
+                          style={{
+                            background: `linear-gradient(90deg, ${colors['blue']['400']
+                              } 0% ${(result.votingMap[voting] /
+                                (result.totalVotes === 0
+                                  ? 1
+                                  : result.totalVotes)) *
+                              100
+                              }%, ${colors['gray']['200']} 0% 100%)`,
+                          }}
+                        ></div>
+                      </>
+                    ) : null}
+                  </div>
+                ))
               : null}
           </div>
         </div>

@@ -75,14 +75,14 @@ function StartPlanning({
 
   return (
     <div className="pb-12 w-full h-full flex flex-col items-center overflow-y-scroll overflow-x-hidden">
-      <div className="w-6/12 h-12 text-center">
-        <p className="text-2xl">
+      <div className="w-6/12 mobile:w-full h-12 mobile:h-auto text-center">
+        <p className="text-2xl mobile:text-lg mobile:px-4">
           Choose a name and voting system for your sprint planning
         </p>
       </div>
       {!editMode ? (
         <>
-          <div className="w-6/12 h-auto mt-4">
+          <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4">
             <label htmlFor="userName" className="opacity-50">
               Name
             </label>
@@ -94,7 +94,7 @@ function StartPlanning({
               onChange={(event) => setUserName(event.target.value)}
             />
           </div>
-          <div className="w-6/12 h-auto mt-4 customCheckbox customCheckboxBlue flex flex-row relative">
+          <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4 customCheckbox customCheckboxBlue flex flex-row relative">
             <input
               id="isSpectator"
               type="checkbox"
@@ -112,7 +112,7 @@ function StartPlanning({
         </>
       ) : null}
 
-      <div className="w-6/12 h-auto mt-4">
+      <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4">
         <label htmlFor="planningName" className="opacity-50">
           Planning name
         </label>
@@ -124,7 +124,7 @@ function StartPlanning({
           onChange={(event) => setPlanningName(event.target.value)}
         />
       </div>
-      <div className="w-6/12 h-auto mt-4">
+      <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4">
         <label htmlFor="votingSystem" className="opacity-50">
           Voting system
         </label>
@@ -158,7 +158,7 @@ function StartPlanning({
           onDelete={(list) => setVotingSystem([...list])}
         />
       </div>
-      <div className="w-6/12 h-12 mt-6">
+      <div className="w-6/12 mobile:w-full mobile:px-4 h-12 mt-6">
         <Button
           fullWidth
           fullHeight

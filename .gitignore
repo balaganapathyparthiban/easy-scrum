@@ -7,3 +7,4 @@ build
 .firebase
 .firebaserc
 firebase.json
+.env.local

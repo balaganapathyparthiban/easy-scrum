@@ -53,7 +53,6 @@ const Retro = () => {
         if (!response) return
 
         const data = await SEA.decrypt(response, hash)
-        console.log(data)
 
         tempTemplates[0].name = data.templates[0]?.name
         tempTemplates[0].color = data.templates[0]?.color
@@ -72,7 +71,6 @@ const Retro = () => {
         if (!response) return
 
         const user = await SEA.decrypt(response, hash)
-        console.log(user)
 
         if (user.id === localStorage.getItem(CONST.USER_ID)) {
           if (user.admin) {
@@ -91,7 +89,6 @@ const Retro = () => {
         if (!response) return
 
         const template = await SEA.decrypt(response, hash)
-        console.log(template)
 
         const ttIndex = tempTemplates[template.index].list.findIndex(
           (tt) => tt?.id === template?.value?.id
@@ -240,6 +237,12 @@ const Retro = () => {
     setTempTemplates(tempArr)
   }
 
+  const cancelTemplateList = (index, tlIndex) => {
+    const tempArr = [...tempTemplates]
+    delete tempArr[index].list[tlIndex]
+    setTempTemplates(tempArr)
+  }
+
   const addLikeTemplateList = async (index, tlIndex) => {
     const query = new URLSearchParams(location.search)
 
@@ -293,7 +296,7 @@ const Retro = () => {
 
   return (
     <>
-      <div className="w-full h-auto flex flex-row justify-between items-center px-6 pt-8 pb-6">
+      <div className="w-full h-auto flex flex-row justify-between items-center px-6 pt-8 pb-6 mobile:p-4 tablet:p-4">
         <div className="flex flex-row justify-center items-center">
           <Link to={CONST.LANDING}>
             <Logo
@@ -306,12 +309,12 @@ const Retro = () => {
             <SlideUpModal
               showSlideUpModal={showSlideUpModal}
               action={
-                <FiSettings fontSize="24" className="ml-4 text-gray-800" />
+                <FiSettings fontSize="24" className="mobile:text-xl ml-4 text-gray-800" />
               }
               actionHandler={(data) => {
                 setShowSlideUpModal(data)
               }}
-              header={<p className="text-2xl">Update retro settings</p>}
+              header={<Logo color="yellow" colorWeight="400" />}
             >
               <StartRetro
                 submitText="UPDATE"
@@ -325,9 +328,9 @@ const Retro = () => {
           ) : null}
         </div>
         <div className="flex flex-row items-center">
-          <div className="flex flex-row mr-4 items-center">
+          <div className="flex flex-row mr-4 mobile:mr-2 items-center">
             <div
-              className="flex flex-row items-center relative hover:bg-gray-100 focus:bg-gray-100 p-2 rounded outline-none"
+              className="flex flex-row items-center relative hover:bg-gray-100 focus:bg-gray-100 p-2 mobile:p-0 mobile:ml-2 rounded outline-none"
               onClick={() => setShowDropDown(!showDropDown)}
               tabIndex="-1"
               onBlur={() => setShowDropDown(false)}
@@ -335,11 +338,11 @@ const Retro = () => {
               <p className="uppercase text-sm rounded-full bg-blue-400 w-7 h-7 flex flex-row justify-center items-center mr-2 text-white">
                 {userName[0]}
               </p>
-              <p className="cursor-pointer mr-2 capitalize">{userName}</p>
+              <p className="cursor-pointer mr-2 capitalize mobile:hidden">{userName}</p>
               <VscChevronDown className="cursor-pointer" strokeWidth={2} />
               {showDropDown ? (
                 <>
-                  <div className="w-56 h-56 rounded shadow-lg bg-white absolute top-14 right-0 z-10 border">
+                  <div className="w-56 h-56 rounded shadow-lg bg-white absolute top-14 mobile:top-8 right-0 mobile:-right-16 z-10 border">
                     <div className="w-full h-auto flex flex-row p-2">
                       <p className="flex flex-row justify-center items-center text-xl uppercase rounded-full bg-blue-400 w-12 h-12 mr-2 text-white">
                         {userName[0]}
@@ -377,12 +380,13 @@ const Retro = () => {
               readOnly
             />
             <Button bgColor="yellow" bgColorWeight="400" textColor="white">
-              <FiShare2 fontSize="20" className="mr-2 relative" /> Copy link
+              <FiShare2 fontSize="20" className="text-base mr-2 relative" />
+              <span className='mobile:text-xs'>Copy link</span>
             </Button>
           </div>
         </div>
       </div>
-      <div className="w-full h-[calc(100vh-96px)] px-6 pb-6 flex flex-row">
+      <div className="w-full h-[calc(100vh-96px)] mobile:h-[calc(100vh-64px)] tablet:h-[calc(100vh-76px)] px-6 mobile:px-4 tablet:px-4 pb-6 mobile:pb-4 tablet:pb-4 flex flex-row mobile:flex-col">
         {tempTemplates.map((template, index) => (
           <RetroCard
             key={[index].join('_')}
@@ -405,6 +409,7 @@ const Retro = () => {
             cancelEditTemplateList={(tlIndex) =>
               cancelEditTemplateList(index, tlIndex)
             }
+            cancelTemplateList={(tlIndex) => cancelTemplateList(index, tlIndex)}
             addLikeTemplateList={(tlIndex) =>
               addLikeTemplateList(index, tlIndex)
             }

@@ -81,14 +81,14 @@ function StartRetro({
 
   return (
     <div className="pb-12 w-full h-full flex flex-col items-center overflow-y-scroll overflow-x-hidden">
-      <div className="w-6/12 h-12 text-center">
-        <p className="text-2xl">
+      <div className="w-6/12 mobile:w-full h-12 mobile:h-auto text-center">
+        <p className="text-2xl mobile:text-lg mobile:px-4">
           Choose a name and template for your sprint retrospective
         </p>
       </div>
       {!editMode ? (
         <>
-          <div className="w-6/12 h-auto mt-4">
+          <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4">
             <label htmlFor="userName" className="opacity-50">
               Name
             </label>
@@ -102,7 +102,7 @@ function StartRetro({
           </div>
         </>
       ) : null}
-      <div className="w-6/12 h-auto mt-4">
+      <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4">
         <label htmlFor="retroName" className="opacity-50">
           Retro Name
         </label>
@@ -114,7 +114,7 @@ function StartRetro({
           onChange={(event) => setRetroName(event.target.value)}
         />
       </div>
-      <div className="w-6/12 h-auto mt-4">
+      <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4">
         <label htmlFor="retroName" className="opacity-50">
           Template Column's
         </label>
@@ -140,7 +140,7 @@ function StartRetro({
           </div>
         ))}
       </div>
-      <div className="w-6/12 h-auto mt-4">
+      <div className="w-6/12 mobile:w-full mobile:px-4 h-auto mt-4">
         <div className="flex flex-row customCheckbox customCheckboxYellow mt-2 relative">
           <input
             id="showCardAuthor"
@@ -157,7 +157,7 @@ function StartRetro({
           </label>
         </div>
       </div>
-      <div className="w-6/12 h-12 mt-6">
+      <div className="w-6/12 mobile:w-full mobile:px-4 h-12 mt-6">
         <Button
           fullWidth
           fullHeight
