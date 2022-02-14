@@ -14,6 +14,7 @@ import StartRetro from '../../components/ui/landing/StartRero/StartRetro'
 import PopUpModal from '../../components/shared/PopUpModal/PopUpModal'
 import Input from '../../components/forms/Input/Input'
 import RetroCard from './RetroCard'
+import { toast } from 'react-toastify'
 
 const Retro = () => {
   const { push, location } = useHistory()
@@ -105,7 +106,7 @@ const Retro = () => {
 
   const joinUserToRoom = async () => {
     if (!userName) {
-      alert('Name is required')
+      toast.error('Name is required')
       return
     }
 
@@ -156,7 +157,7 @@ const Retro = () => {
     const query = new URLSearchParams(location.search)
 
     if (!inputValues[`value${index}${tlIndex}`]) {
-      alert('Empty message not allowed')
+      toast.error('Empty message not allowed')
       return
     }
 
@@ -285,7 +286,7 @@ const Retro = () => {
     copyText.select()
     copyText.setSelectionRange(0, 99999)
     navigator.clipboard.writeText(copyText.value)
-    alert('Link Copied:)')
+    toast.info('Link Copied.')
   }
 
   const onLogout = () => {
@@ -303,6 +304,7 @@ const Retro = () => {
               color="yellow"
               colorWeight="400"
               logoTitle={retroData.retroName}
+              hideTitleInMobile
             />
           </Link>
           {role === CONST.ADMIN ? (

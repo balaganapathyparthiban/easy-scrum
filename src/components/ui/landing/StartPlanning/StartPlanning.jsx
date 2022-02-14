@@ -9,13 +9,14 @@ import Button from '../../../forms/Button/Button'
 import Input from '../../../forms/Input/Input'
 import CONST from '../../../../utils/constants'
 import MultipleInput from '../../../forms/MultipleInput/MultipleInput'
+import { toast } from 'react-toastify'
 
 function StartPlanning({
   submitText = 'CONTINUE',
   editMode = false,
   editPlanningName = '',
   editVotingSystem = PLANNING_SCHEMA.votingSystem,
-  editSubmitHandler = () => {},
+  editSubmitHandler = () => { },
 }) {
   const { push } = useHistory()
 
@@ -28,9 +29,14 @@ function StartPlanning({
   const [isLoading, setLoading] = useState(false)
 
   const continueToPlanning = async () => {
-    if (userName?.length === 0) return alert('Name is required.')
-    if (votingSystem?.length === 0)
-      return alert('Voting system must have atlease one.')
+    if (userName?.length === 0) {
+      toast.error('Name is required.')
+      return
+    }
+    if (votingSystem?.length === 0) {
+      toast.error('Voting system must have atlease one.')
+      return
+    }
 
     if (editMode) {
       editSubmitHandler({
@@ -133,15 +139,15 @@ function StartPlanning({
           list={votingSystem}
           onAdd={(value) => {
             if (parseFloat(value) < 0) {
-              alert('Only positive number allowed')
+              toast.error('Only positive number allowed')
               return
             }
             if (votingSystem.length >= 12) {
-              alert('Only 12 voting values allowed')
+              toast.error('Only 12 voting values allowed')
               return
             }
             if (votingSystem.filter((vs) => vs.name === value).length > 0) {
-              alert(`${value} already exists`)
+              toast.error(`${value} already exists`)
               return
             }
             votingSystem.push({

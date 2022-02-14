@@ -10,6 +10,7 @@ import Input from '../../../forms/Input/Input'
 import CONST from '../../../../utils/constants'
 
 import './StartRetro.css'
+import { toast } from 'react-toastify'
 
 function StartRetro({
   submitText = 'CONTINUE',
@@ -17,7 +18,7 @@ function StartRetro({
   editRetroName = '',
   editTemplates = RETRO_SCHEMA.templates,
   editShowCardAuthor = RETRO_SCHEMA.showCardAuthor,
-  editSubmitHandler = () => {},
+  editSubmitHandler = () => { },
 }) {
   const { push } = useHistory()
 
@@ -30,13 +31,18 @@ function StartRetro({
   const [isLoading, setLoading] = useState(false)
 
   const continueToRetro = async () => {
-    if (userName?.length === 0) return alert('Name is required.')
+    if (userName?.length === 0) {
+      toast.error('Name is required.')
+      return
+    }
     if (
       templates[0].name?.length === 0 ||
       templates[1].name?.length === 0 ||
       templates[2].name?.length === 0
-    )
-      return alert("Please enter template column's name must not be empty.")
+    ) {
+      toast.error("Please enter template column's name must not be empty.")
+      return
+    }
 
     if (editMode) {
       editSubmitHandler({

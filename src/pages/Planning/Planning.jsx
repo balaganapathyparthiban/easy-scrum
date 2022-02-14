@@ -18,6 +18,7 @@ import StartPlanning from '../../components/ui/landing/StartPlanning/StartPlanni
 import SlideUpModal from '../../components/shared/SlideUpModal/SlideUpModal'
 import PopUpModal from '../../components/shared/PopUpModal/PopUpModal'
 import Input from '../../components/forms/Input/Input'
+import { toast } from 'react-toastify'
 
 const Planning = () => {
   const { push, location } = useHistory()
@@ -123,7 +124,7 @@ const Planning = () => {
 
   const joinUserToRoom = async () => {
     if (!userName) {
-      alert('Name is required')
+      toast.error('Name is required')
       return
     }
 
@@ -247,7 +248,7 @@ const Planning = () => {
     copyText.select()
     copyText.setSelectionRange(0, 99999)
     navigator.clipboard.writeText(copyText.value)
-    alert('Link Copied:)')
+    toast.info('Link Copied.')
   }
 
   const onLogout = () => {
@@ -265,6 +266,7 @@ const Planning = () => {
               color="blue"
               colorWeight="400"
               logoTitle={planningData.planningName}
+              hideTitleInMobile
             />
           </Link>
           {role === CONST.ADMIN ? (
