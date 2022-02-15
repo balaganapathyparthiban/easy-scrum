@@ -8,7 +8,8 @@ import { VscChevronDown } from 'react-icons/vsc'
 import { FiLogOut } from 'react-icons/fi'
 import { MdRefresh } from 'react-icons/md'
 import { VscEye } from 'react-icons/vsc'
-import { FaUsers, FaVoteYea, FaEye, FaUserSecret } from 'react-icons/fa'
+import { FaUsers, FaVoteYea, FaEye } from 'react-icons/fa'
+import { toast } from 'react-toastify'
 
 import { db, hash, PLANNING_SCHEMA } from '../../utils/db'
 import CONST from '../../utils/constants'
@@ -18,7 +19,8 @@ import StartPlanning from '../../components/ui/landing/StartPlanning/StartPlanni
 import SlideUpModal from '../../components/shared/SlideUpModal/SlideUpModal'
 import PopUpModal from '../../components/shared/PopUpModal/PopUpModal'
 import Input from '../../components/forms/Input/Input'
-import { toast } from 'react-toastify'
+import tailwindcssConfig from '../../assets/config/tailwindcss.json'
+
 
 const Planning = () => {
   const { push, location } = useHistory()
@@ -257,6 +259,9 @@ const Planning = () => {
     push(CONST.LANDING)
   }
 
+  const isMobile =
+    document.body.offsetWidth <= parseInt(tailwindcssConfig.screens.mobile.max)
+
   return (
     <>
       <div className="w-full h-auto flex flex-row justify-between items-center px-6 pt-8 pb-6 mobile:p-4 tablet:p-4 outline-none">
@@ -349,7 +354,7 @@ const Planning = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-[calc(100vh-96px)] mobile:h-[calc(100vh-64px)] tablet:h-[calc(100vh-76px)] px-6 mobile:px-4 tablet:px-4 pb-6 mobile:pb-4 tablet:pb-4 flex flex-row mobile:flex-col-reverse mobile:justify-start">
+      <div className="w-full h-[calc(100vh-96px)] mobile:h-[calc(100vh-64px)] tablet:h-[calc(100vh-76px)] px-6 mobile:px-4 tablet:px-4 pb-6 mobile:pb-4 tablet:pb-4 flex flex-row mobile:flex-col-reverse mobile:justify-start overflow-hidden">
         <div className="w-3/4 mobile:w-full h-full mobile:h-3/4 mobile:mt-2 flex flex-col justify-between">
           <div
             className="w-full h-3/4 mobile:h-4/5 grid grid-cols-4 mobile:grid-cols-2 tablet:grid-cols-3 gap-4 mobile:gap-1 border-2 border-blue-400 rounded shadow p-2 overflow-x-hidden overflow-y-scroll relative"
@@ -430,36 +435,40 @@ const Planning = () => {
               ))}
           </div>
         </div>
-        <div className="w-1/4 mobile:w-full h-full mobile:h-1/4 flex flex-col mobile:flex-col-reverse pl-4 mobile:pl-0 tablet:pl-2">
+        <div className="w-1/4 mobile:w-full h-full mobile:h-1/4 flex flex-col mobile:flex-row-reverse pl-4 mobile:pl-0 tablet:pl-2">
           {role === CONST.ADMIN ? (
-            <div className="w-full flex flex-row items-center mobile:justify-center mb-4 mobile:mb-0">
-              <div className="w-1/2 mr-2 tablet:mr-1 mobile:w-1/2">
+            <div className="w-full mobile:w-1/5 flex flex-row mobile:flex-col items-center mobile:justify-center mb-4 mobile:mb-0">
+              <div className="w-1/2 mobile:h-1/2 mr-2 mobile:mr-0 mobile:mb-2 tablet:mr-1 mobile:w-1/2">
                 <Button
                   bgColor="yellow"
                   bgColorWeight="400"
                   textColor="white"
                   onClick={onVotingReset}
                   fullWidth={true}
+                  fullHeight={isMobile}
                   className='mobile:text-xs tablet:text-sm'
                 >
-                  <MdRefresh className="mr-2" fontSize={16} className="mobile:text-lg" /> Reset
+                  <MdRefresh className="mr-2" fontSize={16} className="mobile:text-2xl" />
+                  <span className='mobile:hidden'>Reset</span>
                 </Button>
               </div>
-              <div className="w-1/2 ml-2 tablet:ml-1 mobile:w-1/2">
+              <div className="w-1/2 mobile:h-1/2 ml-2 mobile:ml-0 mobile:mt-2 tablet:ml-1 mobile:w-1/2">
                 <Button
                   bgColor="green"
                   bgColorWeight="400"
                   textColor="white"
                   onClick={onShowVoting}
                   fullWidth={true}
+                  fullHeight={isMobile}
                   className='mobile:text-xs tablet:text-sm'
                 >
-                  <VscEye className="mr-2" fontSize={16} /> Show
+                  <VscEye className="mr-2" fontSize={16} className="mobile:text-2xl" />
+                  <span className='mobile:hidden'>Show</span>
                 </Button>
               </div>
             </div>
           ) : null}
-          <div className="w-full h-auto rounded shadow border-2 border-blue-400 p-4 mobile:p-2 tablet:px-0.5 tablet:py-2 mobile:mb-2 mobile:overflow-y-auto">
+          <div className="w-full mobile:w-4/5 h-auto mobile:max-h-44 rounded shadow border-2 border-blue-400 p-4 mobile:p-2 tablet:px-0.5 tablet:py-2 mobile:mb-0 mobile:overflow-y-auto">
             <div className="flex flex-row justify-between">
               <div className="w-1/3 h-auto flex flex-col justify-center items-center">
                 <div>

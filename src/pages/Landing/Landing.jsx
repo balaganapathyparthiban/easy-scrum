@@ -21,7 +21,7 @@ const Landing = () => {
   }, [])
 
   return (
-    <div className="w-full h-full flex flex-col justify-end text-white overflow-hidden">
+    <div className="w-screen h-screen relative flex flex-col justify-end text-white overflow-hidden">
       <div className="absolute w-full h-16 mobile:h-12 tablet:h-12 top-0 z-10">
         <Header />
       </div>
@@ -29,9 +29,9 @@ const Landing = () => {
         <motion.div
           initial={{ width: isMobile ? '100%' : '50%' }}
           animate={{ width: isMobile ? '100%' : '50%' }}
-          whileHover={{ width: isMobile ? '100%' : '85%' }}
+          whileHover={{ width: isMobile ? '100%' : '75%' }}
           transition={{ ease: 'easeInOut', type: 'spring', stiffness: 75 }}
-          className="tablet:flex-grow h-full mobile:w-full mobile:h-1/2 bg-blue-500 px-4 py-16 mobile:pt-14 tablet:pt-14 mobile:pb-4"
+          className="flex-grow h-full mobile:w-full mobile:h-1/2 bg-blue-500 px-4 py-16 mobile:pt-14 tablet:pt-14 mobile:pb-4"
         >
           <div className="w-full h-full flex flex-col px-6 mobile:px-0 pt-12 pb-6 mobile:py-0 tablet:pt-4 tablet:pb-0">
             <div className="w-full opacity-75">
@@ -61,9 +61,9 @@ const Landing = () => {
         <motion.div
           initial={{ width: isMobile ? '100%' : '50%' }}
           animate={{ width: isMobile ? '100%' : '50%' }}
-          whileHover={{ width: isMobile ? '100%' : '85%' }}
+          whileHover={{ width: isMobile ? '100%' : '75%' }}
           transition={{ ease: 'easeInOut', type: 'spring', stiffness: 75 }}
-          className="tablet:flex-grow h-full mobile:w-full mobile:h-1/2 bg-yellow-500 px-4 py-16 tablet:pt-14 mobile:py-4"
+          className="flex-grow h-full mobile:w-full mobile:h-1/2 bg-yellow-500 px-4 py-16 tablet:pt-14 mobile:py-4"
         >
           <div className="w-full h-full flex flex-col px-6 mobile:px-0 pt-12 pb-6 mobile:py-0 tablet:pt-4 tablet:pb-0">
             <div className="w-full opacity-75">
@@ -95,7 +95,7 @@ const Landing = () => {
           </div>
         </motion.div>
       </div>
-      <div className="w-full h-auto z-10">
+      <div className="w-full h-auto z-10 fixed bottom-0 ">
         <Footer />
       </div>
     </div>
