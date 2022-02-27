@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import PropTypes from 'prop-types'
-import { VscChromeClose } from 'react-icons/vsc'
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
+import { VscChromeClose } from "react-icons/vsc";
 
 const SlideUpModal = ({
   children,
   action,
   header,
   showSlideUpModal = false,
-  actionHandler = () => {},
+  actionHandler = () => { },
 }) => {
-  const [visible, setVisible] = useState(showSlideUpModal)
+  const [visible, setVisible] = useState(showSlideUpModal);
 
   useEffect(() => {
-    setVisible(showSlideUpModal)
-  }, [showSlideUpModal])
+    setVisible(showSlideUpModal);
+  }, [showSlideUpModal]);
 
   const toggleModal = () => {
-    setVisible(!visible)
-    actionHandler(!visible)
-  }
+    setVisible(!visible);
+    actionHandler(!visible);
+  };
 
   return (
     <>
@@ -28,31 +28,30 @@ const SlideUpModal = ({
       </div>
       <motion.div
         className="w-screen h-screen bg-white text-gray-800 absolute left-0 right-0 z-50 overflow-hidden"
-        initial={{ top: '100vh', height: 0 }}
+        initial={{ top: "110vh" }}
         animate={{
-          top: visible ? 0 : '100vh',
-          height: visible ? '100vh' : 0,
+          top: visible ? -1 : "110vh",
         }}
         transition={{
-          ease: 'easeInOut',
-          type: 'tween',
+          ease: "easeInOut",
+          type: "tween",
         }}
       >
-        {visible ? (
-          <div className="w-full h-full flex flex-col">
-            <div className="w-full h-auto flex flex-row justify-between items-center px-6 mobile:px-4 py-8 mobile:py-4">
-              <div className="w-auto h-auto">{header}</div>
-              <div>
-                <VscChromeClose fontSize={26} onClick={toggleModal} />
-              </div>
+
+        <div className="w-full h-full flex flex-col">
+          <div className="w-full h-auto flex flex-row justify-between items-center px-6 mobile:px-4 py-8 mobile:py-4">
+            <div className="w-auto h-auto">{header}</div>
+            <div>
+              <VscChromeClose fontSize={26} onClick={toggleModal} />
             </div>
-            <div className="w-full h-[calc(100%-4rem)]">{children}</div>
           </div>
-        ) : null}
+          <div className="w-full h-[calc(100%-4rem)]">{children}</div>
+        </div>
+
       </motion.div>
     </>
-  )
-}
+  );
+};
 
 SlideUpModal.propTypes = {
   action: PropTypes.oneOfType([
@@ -69,6 +68,6 @@ SlideUpModal.propTypes = {
   ]),
   showSlideUpModal: PropTypes.bool,
   actionHandler: PropTypes.func,
-}
+};
 
-export default SlideUpModal
+export default SlideUpModal;

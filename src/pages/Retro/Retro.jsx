@@ -1,164 +1,175 @@
-import React, { useEffect, useState } from 'react'
-import { FiLogOut, FiSettings, FiShare2 } from 'react-icons/fi'
-import { Link } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
-import { VscChevronDown, VscEye } from 'react-icons/vsc'
-import { v4 as uuidV4 } from 'uuid'
+import React, { useEffect, useState } from "react";
+import { FiLogOut, FiSettings, FiShare2 } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { VscChevronDown } from "react-icons/vsc";
+import { BiExport } from 'react-icons/bi'
+import { v4 as uuidV4 } from "uuid";
+import { CSVLink } from "react-csv";
 
-import { db, hash, RETRO_SCHEMA } from '../../utils/db'
-import Button from '../../components/forms/Button/Button'
-import CONST from '../../utils/constants'
-import Logo from '../../components/shared/Logo/Logo'
-import SlideUpModal from '../../components/shared/SlideUpModal/SlideUpModal'
-import StartRetro from '../../components/ui/landing/StartRero/StartRetro'
-import PopUpModal from '../../components/shared/PopUpModal/PopUpModal'
-import Input from '../../components/forms/Input/Input'
-import RetroCard from './RetroCard'
-import { toast } from 'react-toastify'
+import { db, hash, RETRO_SCHEMA } from "../../utils/db";
+import Button from "../../components/forms/Button/Button";
+import CONST from "../../utils/constants";
+import Logo from "../../components/shared/Logo/Logo";
+import SlideUpModal from "../../components/shared/SlideUpModal/SlideUpModal";
+import StartRetro from "../../components/ui/landing/StartRero/StartRetro";
+import PopUpModal from "../../components/shared/PopUpModal/PopUpModal";
+import Input from "../../components/forms/Input/Input";
+import RetroCard from "./RetroCard";
+import { toast } from "react-toastify";
 
 const Retro = () => {
-  const { push, location } = useHistory()
+  const { push, location } = useHistory();
 
-  const [retroData, setRetroData] = useState(RETRO_SCHEMA)
-  const [users, setUsers] = useState({})
-  const [role, setRole] = useState(CONST.USER)
-  const [tempTemplates, setTempTemplates] = useState(RETRO_SCHEMA.templates)
-  const [inputValues, setInputValue] = useState({})
-  const [showModal, setShowModal] = useState(false)
-  const [userName, setUserName] = useState('')
-  const [showDropDown, setShowDropDown] = useState(false)
-  const [showSlideUpModal, setShowSlideUpModal] = useState(false)
+  const [retroData, setRetroData] = useState(RETRO_SCHEMA);
+  const [users, setUsers] = useState({});
+  const [role, setRole] = useState(CONST.USER);
+  const [tempTemplates, setTempTemplates] = useState(RETRO_SCHEMA.templates);
+  const [inputValues, setInputValue] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [showSlideUpModal, setShowSlideUpModal] = useState(false);
+  const [csvData, setCSVData] = useState({ data: [], headers: [] })
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search)
+    const query = new URLSearchParams(location.search);
 
-    if (!query.get('room')) {
-      push(CONST.LANDING)
+    if (!query.get("room")) {
+      push(CONST.LANDING);
     }
 
-    localStorage.setItem(CONST.ROOM_ID, query.get('room'))
+    localStorage.setItem(CONST.ROOM_ID, query.get("room"));
 
     if (!localStorage.getItem(CONST.USER_ID)) {
-      setShowModal(true)
+      setShowModal(true);
     } else {
-      listenPlanningDataChanges()
+      listenRetroDataChanges();
     }
-  }, [])
+  }, []);
 
-  const listenPlanningDataChanges = () => {
-    const query = new URLSearchParams(location.search)
+  const listenRetroDataChanges = () => {
+    const query = new URLSearchParams(location.search);
 
-    db.get(query.get('room'))
+    db.get(query.get("room"))
       .map()
       .on(async (response) => {
-        if (!response) return
+        if (!response) return;
 
-        const data = await SEA.decrypt(response, hash)
+        const data = await SEA.decrypt(response, hash);
 
-        tempTemplates[0].name = data.templates[0]?.name
-        tempTemplates[0].color = data.templates[0]?.color
-        tempTemplates[1].name = data.templates[1]?.name
-        tempTemplates[1].color = data.templates[1]?.color
-        tempTemplates[2].name = data.templates[2]?.name
-        tempTemplates[2].color = data.templates[2]?.color
+        tempTemplates[0].name = data.templates[0]?.name;
+        tempTemplates[0].color = data.templates[0]?.color;
+        tempTemplates[1].name = data.templates[1]?.name;
+        tempTemplates[1].color = data.templates[1]?.color;
+        tempTemplates[2].name = data.templates[2]?.name;
+        tempTemplates[2].color = data.templates[2]?.color;
 
-        setTempTemplates(tempTemplates)
-        setRetroData(data)
-      })
+        setTempTemplates(tempTemplates);
+        setRetroData(data);
+      });
 
-    db.get(`${query.get('room')}-users`)
+    db.get(`${query.get("room")}-users`)
       .map()
       .on(async (response) => {
-        if (!response) return
+        if (!response) return;
 
-        const user = await SEA.decrypt(response, hash)
+        const user = await SEA.decrypt(response, hash);
 
         if (user.id === localStorage.getItem(CONST.USER_ID)) {
           if (user.admin) {
-            setRole(CONST.ADMIN)
+            setRole(CONST.ADMIN);
           }
-          setUserName(user.name)
+          setUserName(user.name);
         }
 
-        users[user.id] = { ...user }
-        setUsers({ ...users })
-      })
+        users[user.id] = { ...user };
+        setUsers({ ...users });
+      });
 
-    db.get(`${query.get('room')}-templates`)
+    db.get(`${query.get("room")}-templates`)
       .map()
       .on(async (response) => {
-        if (!response) return
+        if (!response) return;
 
-        const template = await SEA.decrypt(response, hash)
+        const template = await SEA.decrypt(response, hash);
 
         const ttIndex = tempTemplates[template.index].list.findIndex(
           (tt) => tt?.id === template?.value?.id
-        )
+        );
 
         if (ttIndex === -1) {
-          tempTemplates[template.index].list.unshift(template.value)
+          tempTemplates[template.index].list.unshift(template.value);
         } else {
-          tempTemplates[template.index].list[ttIndex] = { ...template.value }
+          tempTemplates[template.index].list[ttIndex] = { ...template.value };
         }
-        setTempTemplates([...tempTemplates])
-      })
-  }
+
+        const ttArray = [...tempTemplates].map(d => {
+          d.list = d.list.filter(dl => dl)
+          return d
+        })
+
+        updateCSVData(ttArray)
+        setTempTemplates(ttArray);
+      });
+  };
 
   const joinUserToRoom = async () => {
     if (!userName) {
-      toast.error('Name is required')
-      return
+      toast.error("Name is required");
+      return;
     }
 
-    const query = new URLSearchParams(location.search)
-    const userId = localStorage.getItem(CONST.USER_ID)
+    const query = new URLSearchParams(location.search);
+    const userId = localStorage.getItem(CONST.USER_ID);
 
     if (userId) {
-      users[userId].name = userName
+      users[userId].name = userName;
 
       const userSecret = await SEA.encrypt(
         JSON.stringify({
           ...users[userId],
         }),
         hash
-      )
+      );
 
-      db.get(`${query.get('room')}-users`).put({ [userId]: userSecret })
-      setShowModal(false)
+      db.get(`${query.get("room")}-users`).put({ [userId]: userSecret });
+      setShowModal(false);
     } else {
-      const id = uuidV4()
+      const id = uuidV4();
       const userSecret = await SEA.encrypt(
         JSON.stringify({
           id,
           name: userName,
         }),
         hash
-      )
+      );
 
-      db.get(`${query.get('room')}-users`).put({ [id]: userSecret })
-      localStorage.setItem(CONST.USER_ID, id)
+      db.get(`${query.get("room")}-users`).put({ [id]: userSecret });
+      localStorage.setItem(CONST.USER_ID, id);
 
-      listenPlanningDataChanges()
-      setShowModal(false)
+      listenRetroDataChanges();
+      setShowModal(false);
     }
-  }
+  };
 
   const addNewTemplateList = (index) => {
-    const tempArr = [...tempTemplates]
+    const tempArr = [...tempTemplates];
     tempArr[index].list.unshift({
-      message: '',
+      message: "",
       likes: 0,
       status: CONST.RETRO_STATUS_EDIT,
-    })
-    setTempTemplates(tempArr)
-  }
+    });
+    updateCSVData(tempArr)
+    setTempTemplates(tempArr);
+  };
 
   const submitNewTemplateList = async (index, tlIndex, status) => {
-    const query = new URLSearchParams(location.search)
+    const query = new URLSearchParams(location.search);
 
     if (!inputValues[`value${index}${tlIndex}`]) {
-      toast.error('Empty message not allowed')
-      return
+      toast.error("Empty message not allowed");
+      return;
     }
 
     if (tempTemplates[index]?.list[tlIndex]?.id) {
@@ -172,12 +183,12 @@ const Retro = () => {
           },
         }),
         hash
-      )
-      db.get(`${query.get('room')}-templates`).put({
+      );
+      db.get(`${query.get("room")}-templates`).put({
         [tempTemplates[index].list[tlIndex].id]: templateSecret,
-      })
+      });
     } else {
-      const templateId = uuidV4()
+      const templateId = uuidV4();
 
       const templateSecret = await SEA.encrypt(
         JSON.stringify({
@@ -191,19 +202,20 @@ const Retro = () => {
           },
         }),
         hash
-      )
-      db.get(`${query.get('room')}-templates`).put({
+      );
+      db.get(`${query.get("room")}-templates`).put({
         [templateId]: templateSecret,
-      })
+      });
     }
 
-    delete inputValues[`value${index}${tlIndex}`]
-    delete tempTemplates[index].list[tlIndex]
-    setTempTemplates([...tempTemplates])
-  }
+    delete inputValues[`value${index}${tlIndex}`];
+    delete tempTemplates[index].list[tlIndex];
+    updateCSVData(tempTemplates)
+    setTempTemplates([...tempTemplates]);
+  };
 
   const deleteTemplateList = async (index, tlIndex) => {
-    const query = new URLSearchParams(location.search)
+    const query = new URLSearchParams(location.search);
 
     const templateSecret = await SEA.encrypt(
       JSON.stringify({
@@ -214,40 +226,43 @@ const Retro = () => {
         },
       }),
       hash
-    )
-    db.get(`${query.get('room')}-templates`).put({
+    );
+    db.get(`${query.get("room")}-templates`).put({
       [tempTemplates[index].list[tlIndex].id]: templateSecret,
-    })
-    db.get(`${query.get('room')}-templates`).put({
+    });
+    db.get(`${query.get("room")}-templates`).put({
       [tempTemplates[index].list[tlIndex].id]: null,
-    })
-  }
+    });
+  };
 
   const editTemplateList = (index, tlIndex) => {
-    const tempArr = [...tempTemplates]
+    const tempArr = [...tempTemplates];
     inputValues[`value${index}${tlIndex}`] =
-      tempArr[index].list[tlIndex].message
-    tempArr[index].list[tlIndex].status = CONST.RETRO_STATUS_EDIT
-    setTempTemplates(tempArr)
-  }
+      tempArr[index].list[tlIndex].message;
+    tempArr[index].list[tlIndex].status = CONST.RETRO_STATUS_EDIT;
+    updateCSVData(tempArr)
+    setTempTemplates(tempArr);
+  };
 
   const cancelEditTemplateList = (index, tlIndex) => {
-    const tempArr = [...tempTemplates]
-    inputValues[`value${index}${tlIndex}`] = ''
-    tempArr[index].list[tlIndex].status = CONST.RETRO_STATUS_NONE
-    setTempTemplates(tempArr)
-  }
+    const tempArr = [...tempTemplates];
+    inputValues[`value${index}${tlIndex}`] = "";
+    tempArr[index].list[tlIndex].status = CONST.RETRO_STATUS_NONE;
+    updateCSVData(tempArr)
+    setTempTemplates(tempArr);
+  };
 
   const cancelTemplateList = (index, tlIndex) => {
-    const tempArr = [...tempTemplates]
-    delete tempArr[index].list[tlIndex]
-    setTempTemplates(tempArr)
-  }
+    const tempArr = [...tempTemplates];
+    delete tempArr[index].list[tlIndex];
+    updateCSVData(tempArr)
+    setTempTemplates(tempArr);
+  };
 
   const addLikeTemplateList = async (index, tlIndex) => {
-    const query = new URLSearchParams(location.search)
+    const query = new URLSearchParams(location.search);
 
-    tempTemplates[index].list[tlIndex].likes++
+    tempTemplates[index].list[tlIndex].likes++;
 
     const templateSecret = await SEA.encrypt(
       JSON.stringify({
@@ -255,44 +270,67 @@ const Retro = () => {
         value: tempTemplates[index].list[tlIndex],
       }),
       hash
-    )
-    db.get(`${query.get('room')}-templates`).put({
+    );
+    db.get(`${query.get("room")}-templates`).put({
       [tempTemplates[index].list[tlIndex].id]: templateSecret,
-    })
-  }
+    });
+  };
 
   const editStartRetro = async (data) => {
-    if (role !== CONST.ADMIN) return
+    if (role !== CONST.ADMIN) return;
 
-    const query = new URLSearchParams(location.search)
-    const userId = localStorage.getItem(CONST.USER_ID)
+    const query = new URLSearchParams(location.search);
+    const userId = localStorage.getItem(CONST.USER_ID);
 
     if (users[userId].admin) {
-      retroData.retroName = data.retroName
-      retroData.templates[0].name = data.templates[0].name
-      retroData.templates[1].name = data.templates[1].name
-      retroData.templates[2].name = data.templates[2].name
-      retroData.showCardAuthor = data.showCardAuthor
+      retroData.retroName = data.retroName;
+      retroData.templates[0].name = data.templates[0].name;
+      retroData.templates[1].name = data.templates[1].name;
+      retroData.templates[2].name = data.templates[2].name;
+      retroData.showCardAuthor = data.showCardAuthor;
 
-      const retroSecret = await SEA.encrypt(JSON.stringify(retroData), hash)
-      db.get(query.get('room')).put({ data: retroSecret })
+      const retroSecret = await SEA.encrypt(JSON.stringify(retroData), hash);
+      db.get(query.get("room")).put({ data: retroSecret });
 
-      setShowSlideUpModal(false)
+      setShowSlideUpModal(false);
     }
-  }
+  };
 
   const copyLink = () => {
-    const copyText = document.getElementById('share-url')
-    copyText.select()
-    copyText.setSelectionRange(0, 99999)
-    navigator.clipboard.writeText(copyText.value)
-    toast.info('Link Copied.')
-  }
+    const copyText = document.getElementById("share-url");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+    toast.info("Link Copied.");
+  };
 
   const onLogout = () => {
-    localStorage.removeItem(CONST.USER_ID)
-    localStorage.removeItem(CONST.ROOM_ID)
-    push(CONST.LANDING)
+    localStorage.removeItem(CONST.USER_ID);
+    localStorage.removeItem(CONST.ROOM_ID);
+    push(CONST.LANDING);
+  };
+
+  const updateCSVData = (ttArray = []) => {
+    ttArray = [...ttArray].map(d => {
+      d.list = d.list.filter(dl => dl)
+      return d
+    })
+    const csvHeaders = ttArray.map(tt => ({ label: tt.name, key: tt.name.toLowerCase().replaceAll(" ", "_") }))
+    const csvData = []
+
+    ttArray.forEach(tt => {
+      tt.list.forEach((ttl, index) => {
+        if (csvData[index]) {
+          csvData[index][tt.name.toLowerCase().replaceAll(" ", "_")] = ttl.message
+        } else {
+          const tempObj = { [csvHeaders[0].key]: "", [csvHeaders[1].key]: "", [csvHeaders[2].key]: "" }
+          tempObj[tt.name.toLowerCase().replaceAll(" ", "_")] = ttl.message
+          csvData.push(tempObj)
+        }
+      })
+    })
+
+    setCSVData({ data: csvData, headers: csvHeaders })
   }
 
   return (
@@ -311,10 +349,13 @@ const Retro = () => {
             <SlideUpModal
               showSlideUpModal={showSlideUpModal}
               action={
-                <FiSettings fontSize="24" className="mobile:text-xl ml-4 text-gray-800" />
+                <FiSettings
+                  fontSize="24"
+                  className="mobile:text-xl ml-4 text-gray-800"
+                />
               }
               actionHandler={(data) => {
-                setShowSlideUpModal(data)
+                setShowSlideUpModal(data);
               }}
               header={<Logo color="yellow" colorWeight="400" />}
             >
@@ -340,7 +381,9 @@ const Retro = () => {
               <p className="uppercase text-sm rounded-full bg-blue-400 w-7 h-7 flex flex-row justify-center items-center mr-2 text-white">
                 {userName[0]}
               </p>
-              <p className="cursor-pointer mr-2 capitalize mobile:hidden">{userName}</p>
+              <p className="cursor-pointer mr-2 capitalize mobile:hidden">
+                {userName}
+              </p>
               <VscChevronDown className="cursor-pointer" strokeWidth={2} />
               {showDropDown ? (
                 <>
@@ -382,16 +425,25 @@ const Retro = () => {
               readOnly
             />
             <Button bgColor="yellow" bgColorWeight="400" textColor="white">
-              <FiShare2 fontSize="20" className="text-base mr-2 relative" />
-              <span className='mobile:text-xs'>Copy link</span>
+              <FiShare2 fontSize="20" className="text-base mr-2 relative mobile:mr-0" />
+              <span className="mobile:hidden">Copy link</span>
             </Button>
+          </div>
+          <div className="ml-2">
+            <CSVLink data={csvData.data} header={csvData.headers} filename={`retro-${new Date().toLocaleDateString()}.csv`}>
+              <Button bgColor="gray" bgColorWeight="400" textColor="white">
+                <BiExport fontSize="20" className="text-base mr-2 relative mobile:mr-0" />
+                <span className="mobile:hidden">Export .csv</span>
+                <span className="hidden mobile:inline text-xs ml-1">.csv</span>
+              </Button>
+            </CSVLink>
           </div>
         </div>
       </div>
       <div className="w-full h-[calc(100vh-96px)] mobile:h-[calc(100vh-64px)] tablet:h-[calc(100vh-76px)] px-6 mobile:px-4 tablet:px-4 pb-6 mobile:pb-4 tablet:pb-4 flex flex-row mobile:flex-col">
         {tempTemplates.map((template, index) => (
           <RetroCard
-            key={[index].join('_')}
+            key={[index].join("_")}
             users={users}
             template={template}
             inputValues={(tlIndex) => inputValues[`value${index}${tlIndex}`]}
@@ -424,11 +476,11 @@ const Retro = () => {
         header="Personal Details"
         actionHandler={(status) => {
           if (!status && !localStorage.getItem(CONST.USER_ID)) {
-            push(CONST.LANDING)
-            return
+            push(CONST.LANDING);
+            return;
           } else {
-            setUserName(users[localStorage.getItem(CONST.USER_ID)]?.name)
-            setShowModal(false)
+            setUserName(users[localStorage.getItem(CONST.USER_ID)]?.name);
+            setShowModal(false);
           }
         }}
       >
@@ -440,7 +492,7 @@ const Retro = () => {
             <Input
               id="scrumMasterName"
               className="h-12"
-              placeholder="Enter planning name"
+              placeholder="Enter name"
               value={userName}
               onChange={(event) => setUserName(event.target.value)}
             />
@@ -459,7 +511,7 @@ const Retro = () => {
         </div>
       </PopUpModal>
     </>
-  )
-}
+  );
+};
 
-export default Retro
+export default Retro;

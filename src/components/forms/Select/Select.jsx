@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { BiChevronDown } from 'react-icons/bi'
-import { motion } from 'framer-motion'
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { BiChevronDown } from "react-icons/bi";
+import { motion } from "framer-motion";
 
 const Select = ({
   placeholder,
@@ -11,18 +11,18 @@ const Select = ({
   style = {},
   value,
 }) => {
-  const [showDropDown, setShowDropDown] = useState(false)
-  const [valueState, setValueState] = useState('')
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [valueState, setValueState] = useState("");
 
   useEffect(() => {
-    setValueState(value)
-  }, [])
+    setValueState(value);
+  }, []);
 
   const selectOptionHandler = (option) => {
-    setValueState(option.name)
-    onChange(option)
-    setShowDropDown(false)
-  }
+    setValueState(option.name);
+    onChange(option);
+    setShowDropDown(false);
+  };
 
   return (
     <div
@@ -49,13 +49,13 @@ const Select = ({
         initial={{ opacity: 0, height: 0 }}
         animate={{
           opacity: showDropDown ? 1 : 0,
-          height: showDropDown ? 'auto' : 0,
+          height: showDropDown ? "auto" : 0,
         }}
         transition={{ duration: 0.25, delayChildren: 500 }}
       >
         {options.map((option, index) => (
           <div
-            key={[option, index].join('_')}
+            key={[option, index].join("_")}
             className="cursor-pointer p-2 hover:bg-blue-400"
             onClick={() => selectOptionHandler(option)}
           >
@@ -64,8 +64,8 @@ const Select = ({
         ))}
       </motion.div>
     </div>
-  )
-}
+  );
+};
 
 Select.propTypes = {
   options: PropTypes.array,
@@ -74,6 +74,6 @@ Select.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   value: PropTypes.string,
-}
+};
 
-export default Select
+export default Select;

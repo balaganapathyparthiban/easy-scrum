@@ -1,60 +1,63 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
-import { v4 as uuidV4 } from 'uuid'
-import { GoCheck } from 'react-icons/go'
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
+import { v4 as uuidV4 } from "uuid";
+import { GoCheck } from "react-icons/go";
 
-import { db, hash, PLANNING_SCHEMA } from '../../../../utils/db'
-import Button from '../../../forms/Button/Button'
-import Input from '../../../forms/Input/Input'
-import CONST from '../../../../utils/constants'
-import MultipleInput from '../../../forms/MultipleInput/MultipleInput'
-import { toast } from 'react-toastify'
+import { db, hash, PLANNING_SCHEMA } from "../../../../utils/db";
+import Button from "../../../forms/Button/Button";
+import Input from "../../../forms/Input/Input";
+import CONST from "../../../../utils/constants";
+import MultipleInput from "../../../forms/MultipleInput/MultipleInput";
+import { toast } from "react-toastify";
 
 function StartPlanning({
-  submitText = 'CONTINUE',
+  submitText = "CONTINUE",
   editMode = false,
-  editPlanningName = '',
+  editPlanningName = "",
   editVotingSystem = PLANNING_SCHEMA.votingSystem,
-  editSubmitHandler = () => { },
+  editSubmitHandler = () => {},
 }) {
-  const { push } = useHistory()
+  const { push } = useHistory();
 
-  const planningData = { ...PLANNING_SCHEMA }
+  const planningData = { ...PLANNING_SCHEMA };
 
-  const [userName, setUserName] = useState('Scrum master')
-  const [isSpectator, setIsSpectator] = useState(true)
-  const [planningName, setPlanningName] = useState(editPlanningName)
-  const [votingSystem, setVotingSystem] = useState(editVotingSystem)
-  const [isLoading, setLoading] = useState(false)
+  const [userName, setUserName] = useState("Scrum master");
+  const [isSpectator, setIsSpectator] = useState(true);
+  const [planningName, setPlanningName] = useState(editPlanningName);
+  const [votingSystem, setVotingSystem] = useState(editVotingSystem);
+  const [isLoading, setLoading] = useState(false);
 
   const continueToPlanning = async () => {
     if (userName?.length === 0) {
-      toast.error('Name is required.')
-      return
+      toast.error("Name is required.");
+      return;
     }
     if (votingSystem?.length === 0) {
-      toast.error('Voting system must have atlease one.')
-      return
+      toast.error("Voting system must have atlease one.");
+      return;
     }
 
     if (editMode) {
       editSubmitHandler({
         planningName: planningName,
         votingSystem: votingSystem,
-      })
-      return
+      });
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
-    const id = uuidV4()
-    const roomId = uuidV4()
+    const id = uuidV4();
+    const roomId = uuidV4();
 
-    planningData.planningName = planningName
-    planningData.votingSystem = votingSystem
+    planningData.planningName = planningName;
+    planningData.votingSystem = votingSystem;
 
-    const planningSecret = await SEA.encrypt(JSON.stringify(planningData), hash)
+    const planningSecret = await SEA.encrypt(
+      JSON.stringify(planningData),
+      hash
+    );
     const userSecret = await SEA.encrypt(
       JSON.stringify({
         id,
@@ -64,20 +67,20 @@ function StartPlanning({
         vote: null,
       }),
       hash
-    )
+    );
 
-    db.get(roomId).put({ data: planningSecret })
-    db.get(`${roomId}-users`).put({ [id]: userSecret })
+    db.get(roomId).put({ data: planningSecret });
+    db.get(`${roomId}-users`).put({ [id]: userSecret });
 
-    localStorage.setItem(CONST.USER_ID, id)
-    localStorage.setItem(CONST.ROOM_ID, roomId)
+    localStorage.setItem(CONST.USER_ID, id);
+    localStorage.setItem(CONST.ROOM_ID, roomId);
 
-    setLoading(false)
+    setLoading(false);
     push({
       pathname: CONST.PLANNING,
       search: `?room=${roomId}`,
-    })
-  }
+    });
+  };
 
   return (
     <div className="pb-12 w-full h-full flex flex-col items-center overflow-y-scroll overflow-x-hidden">
@@ -139,27 +142,27 @@ function StartPlanning({
           list={votingSystem}
           onAdd={(value) => {
             if (parseFloat(value) < 0) {
-              toast.error('Only positive number allowed')
-              return
+              toast.error("Only positive number allowed");
+              return;
             }
             if (votingSystem.length >= 12) {
-              toast.error('Only 12 voting values allowed')
-              return
+              toast.error("Only 12 voting values allowed");
+              return;
             }
             if (votingSystem.filter((vs) => vs.name === value).length > 0) {
-              toast.error(`${value} already exists`)
-              return
+              toast.error(`${value} already exists`);
+              return;
             }
             votingSystem.push({
               name: value,
-            })
+            });
             setVotingSystem(
               [...votingSystem].sort((a, b) => {
-                if (parseFloat(a.name) > parseFloat(b.name)) return 1
-                if (parseFloat(a.name) < parseFloat(b.name)) return -1
-                if (parseFloat(a.name) == parseFloat(b.name)) return 0
+                if (parseFloat(a.name) > parseFloat(b.name)) return 1;
+                if (parseFloat(a.name) < parseFloat(b.name)) return -1;
+                if (parseFloat(a.name) == parseFloat(b.name)) return 0;
               })
-            )
+            );
           }}
           onDelete={(list) => setVotingSystem([...list])}
         />
@@ -173,14 +176,14 @@ function StartPlanning({
           onClick={!isLoading ? continueToPlanning : null}
         >
           {isLoading ? (
-            <div className="loader" style={{ fontSize: '3px' }}></div>
+            <div className="loader" style={{ fontSize: "3px" }}></div>
           ) : (
             submitText
           )}
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 StartPlanning.propTypes = {
@@ -189,6 +192,6 @@ StartPlanning.propTypes = {
   editPlanningName: PropTypes.string,
   editVotingSystem: PropTypes.array,
   editSubmitHandler: PropTypes.func,
-}
+};
 
-export default StartPlanning
+export default StartPlanning;

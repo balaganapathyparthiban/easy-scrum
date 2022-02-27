@@ -1,13 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { AiFillLike } from 'react-icons/ai'
-import { BiEditAlt } from 'react-icons/bi'
-import { FaTimes, FaUserAlt } from 'react-icons/fa'
-import { GoCheck } from 'react-icons/go'
-import { MdDelete } from 'react-icons/md'
-import { IoMdAdd } from 'react-icons/io'
+import React from "react";
+import PropTypes from "prop-types";
+import { AiFillLike } from "react-icons/ai";
+import { BiEditAlt } from "react-icons/bi";
+import { FaTimes, FaUserAlt } from "react-icons/fa";
+import { GoCheck } from "react-icons/go";
+import { MdDelete } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
 
-import CONST from '../../utils/constants'
+import CONST from "../../utils/constants";
 
 const RetroCard = ({
   template,
@@ -25,8 +25,10 @@ const RetroCard = ({
 }) => {
   return (
     <div className="w-1/3 mobile:w-full h-full flex flex-col border rounded p-2 mx-1 overflow-hidden">
-      <div className='w-full h-auto flex flex-col mobile:flex-row item-center mobile:justify-between'>
-        <p className="text-lg mobile:text-sm mobile:text-center flex flex-row items-center opacity-50">{template.name}</p>
+      <div className="w-full h-auto flex flex-col mobile:flex-row item-center mobile:justify-between">
+        <p className="text-lg mobile:text-sm mobile:text-center flex flex-row items-center opacity-50">
+          {template.name}
+        </p>
         <div
           className="w-full mobile:w-8 h-8 bg-gray-200 rounded mt-2 mb-2 mobile:my-0 flex flex-row justify-center items-center cursor-pointer"
           onClick={addNewTemplateList}
@@ -44,7 +46,7 @@ const RetroCard = ({
                 style={{
                   backgroundColor:
                     tl.status === CONST.RETRO_STATUS_EDIT
-                      ? 'white'
+                      ? "white"
                       : template.color,
                   borderColor: template.color,
                 }}
@@ -96,7 +98,9 @@ const RetroCard = ({
                       <>
                         <div
                           className="text-gray-800 mx-1 cursor-pointer"
-                          onClick={() => submitNewTemplateList(index, tl.status)}
+                          onClick={() =>
+                            submitNewTemplateList(index, tl.status)
+                          }
                         >
                           <GoCheck fontSize={20} />
                         </div>
@@ -109,7 +113,7 @@ const RetroCard = ({
                       </>
                     )}
                     {tl.userId === localStorage.getItem(CONST.USER_ID) &&
-                      tl.status === CONST.RETRO_STATUS_NONE ? (
+                    tl.status === CONST.RETRO_STATUS_NONE ? (
                       <div
                         className="text-gray-800 ml-1 cursor-pointer"
                         onClick={() => deleteTemplateList(index)}
@@ -118,7 +122,7 @@ const RetroCard = ({
                       </div>
                     ) : null}
                     {tl.userId === localStorage.getItem(CONST.USER_ID) &&
-                      tl.status === CONST.RETRO_STATUS_EDIT ? (
+                    tl.status === CONST.RETRO_STATUS_EDIT ? (
                       <div
                         className="text-gray-800 ml-1 cursor-pointer"
                         onClick={() => cancelEditTemplateList(index)}
@@ -134,8 +138,8 @@ const RetroCard = ({
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 RetroCard.propTypes = {
   template: PropTypes.object,
@@ -150,6 +154,6 @@ RetroCard.propTypes = {
   cancelTemplateList: PropTypes.func,
   addLikeTemplateList: PropTypes.func,
   users: PropTypes.object,
-}
+};
 
-export default RetroCard
+export default RetroCard;

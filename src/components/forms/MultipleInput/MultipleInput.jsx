@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { BsPlus } from 'react-icons/bs'
-import { AiTwotoneDelete } from 'react-icons/ai'
-import PropTypes from 'prop-types'
+import React, { useState } from "react";
+import { BsPlus } from "react-icons/bs";
+import { AiTwotoneDelete } from "react-icons/ai";
+import PropTypes from "prop-types";
 
 const MultipleInput = ({
   list,
@@ -9,16 +9,16 @@ const MultipleInput = ({
   onAdd = () => {},
   onDelete = () => {},
 }) => {
-  const [valueState, setValueState] = useState('')
+  const [valueState, setValueState] = useState("");
 
   const changeHandler = () => {
-    onAdd(valueState)
-    setValueState('')
-  }
+    onAdd(valueState);
+    setValueState("");
+  };
 
   const deleteHandler = (index) => {
-    onDelete(list.filter((_, i) => i != index))
-  }
+    onDelete(list.filter((_, i) => i != index));
+  };
 
   return (
     <div className="w-full h-32 rounded border border-gray-300 shadow flex flex-col text-gray-800 relative">
@@ -38,7 +38,7 @@ const MultipleInput = ({
       <div className="w-full h-[calc(100%-3rem)] px-2 overflow-x-hidden overflow-y-auto">
         {list.map((el, index) => (
           <div
-            key={[el.name, index].join('_')}
+            key={[el.name, index].join("_")}
             className="flex flex-row justify-between items-center"
           >
             <p className="text-sm">{el.name}</p>
@@ -50,14 +50,14 @@ const MultipleInput = ({
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 MultipleInput.propTypes = {
   list: PropTypes.array,
   placeholder: PropTypes.string,
   onAdd: PropTypes.func,
   onDelete: PropTypes.func,
-}
+};
 
-export default MultipleInput
+export default MultipleInput;

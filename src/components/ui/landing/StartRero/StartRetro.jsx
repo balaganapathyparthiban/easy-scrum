@@ -1,47 +1,47 @@
-import React, { useState } from 'react'
-import { GoCheck } from 'react-icons/go'
-import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
-import { v4 as uuidV4 } from 'uuid'
+import React, { useState } from "react";
+import { GoCheck } from "react-icons/go";
+import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
+import { v4 as uuidV4 } from "uuid";
 
-import { db, hash, RETRO_SCHEMA } from '../../../../utils/db'
-import Button from '../../../forms/Button/Button'
-import Input from '../../../forms/Input/Input'
-import CONST from '../../../../utils/constants'
+import { db, hash, RETRO_SCHEMA } from "../../../../utils/db";
+import Button from "../../../forms/Button/Button";
+import Input from "../../../forms/Input/Input";
+import CONST from "../../../../utils/constants";
 
-import './StartRetro.css'
-import { toast } from 'react-toastify'
+import "./StartRetro.css";
+import { toast } from "react-toastify";
 
 function StartRetro({
-  submitText = 'CONTINUE',
+  submitText = "CONTINUE",
   editMode = false,
-  editRetroName = '',
+  editRetroName = "",
   editTemplates = RETRO_SCHEMA.templates,
   editShowCardAuthor = RETRO_SCHEMA.showCardAuthor,
-  editSubmitHandler = () => { },
+  editSubmitHandler = () => {},
 }) {
-  const { push } = useHistory()
+  const { push } = useHistory();
 
-  const retroData = { ...RETRO_SCHEMA }
+  const retroData = { ...RETRO_SCHEMA };
 
-  const [userName, setUserName] = useState('Scrum master')
-  const [retroName, setRetroName] = useState(editRetroName)
-  const [templates, setTemplates] = useState(editTemplates)
-  const [showCardAuthor, setShowCardAuthor] = useState(editShowCardAuthor)
-  const [isLoading, setLoading] = useState(false)
+  const [userName, setUserName] = useState("Scrum master");
+  const [retroName, setRetroName] = useState(editRetroName);
+  const [templates, setTemplates] = useState(editTemplates);
+  const [showCardAuthor, setShowCardAuthor] = useState(editShowCardAuthor);
+  const [isLoading, setLoading] = useState(false);
 
   const continueToRetro = async () => {
     if (userName?.length === 0) {
-      toast.error('Name is required.')
-      return
+      toast.error("Name is required.");
+      return;
     }
     if (
       templates[0].name?.length === 0 ||
       templates[1].name?.length === 0 ||
       templates[2].name?.length === 0
     ) {
-      toast.error("Please enter template column's name must not be empty.")
-      return
+      toast.error("Please enter template column's name must not be empty.");
+      return;
     }
 
     if (editMode) {
@@ -49,20 +49,20 @@ function StartRetro({
         retroName: retroName,
         templates: templates,
         showCardAuthor: showCardAuthor,
-      })
-      return
+      });
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
-    const id = uuidV4()
-    const roomId = uuidV4()
+    const id = uuidV4();
+    const roomId = uuidV4();
 
-    retroData.retroName = retroName
-    retroData.templates = templates
-    retroData.showCardAuthor = showCardAuthor
+    retroData.retroName = retroName;
+    retroData.templates = templates;
+    retroData.showCardAuthor = showCardAuthor;
 
-    const retroSecret = await SEA.encrypt(JSON.stringify(retroData), hash)
+    const retroSecret = await SEA.encrypt(JSON.stringify(retroData), hash);
     const userSecret = await SEA.encrypt(
       JSON.stringify({
         id,
@@ -70,20 +70,20 @@ function StartRetro({
         name: userName,
       }),
       hash
-    )
+    );
 
-    db.get(roomId).put({ data: retroSecret })
-    db.get(`${roomId}-users`).put({ [id]: userSecret })
+    db.get(roomId).put({ data: retroSecret });
+    db.get(`${roomId}-users`).put({ [id]: userSecret });
 
-    localStorage.setItem(CONST.USER_ID, id)
-    localStorage.setItem(CONST.ROOM_ID, roomId)
+    localStorage.setItem(CONST.USER_ID, id);
+    localStorage.setItem(CONST.ROOM_ID, roomId);
 
-    setLoading(false)
+    setLoading(false);
     push({
       pathname: CONST.RETRO,
       search: `?room=${roomId}`,
-    })
-  }
+    });
+  };
 
   return (
     <div className="pb-12 w-full h-full flex flex-col items-center overflow-y-scroll overflow-x-hidden">
@@ -126,7 +126,7 @@ function StartRetro({
         </label>
         {templates.map((template, index) => (
           <div
-            key={[index].join('_')}
+            key={[index].join("_")}
             className="w-full h-16 flex flex-row justify-center items-center relative"
           >
             <div
@@ -138,9 +138,9 @@ function StartRetro({
               placeholder="Enter template column name"
               value={template.name}
               onChange={(event) => {
-                const tempArr = [...templates]
-                tempArr[index].name = event.target.value
-                setTemplates([...tempArr])
+                const tempArr = [...templates];
+                tempArr[index].name = event.target.value;
+                setTemplates([...tempArr]);
               }}
             />
           </div>
@@ -172,14 +172,14 @@ function StartRetro({
           onClick={continueToRetro}
         >
           {isLoading ? (
-            <div className="loader" style={{ fontSize: '3px' }}></div>
+            <div className="loader" style={{ fontSize: "3px" }}></div>
           ) : (
             submitText
           )}
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 StartRetro.propTypes = {
@@ -189,6 +189,6 @@ StartRetro.propTypes = {
   editTemplates: PropTypes.array,
   editShowCardAuthor: PropTypes.bool,
   editSubmitHandler: PropTypes.func,
-}
+};
 
-export default StartRetro
+export default StartRetro;

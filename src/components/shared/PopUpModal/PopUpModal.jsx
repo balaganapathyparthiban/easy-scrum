@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import PropTypes from 'prop-types'
-import { VscChromeClose } from 'react-icons/vsc'
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
+import { VscChromeClose } from "react-icons/vsc";
 
 const PopUpModal = ({
   children,
@@ -9,18 +9,18 @@ const PopUpModal = ({
   header,
   showModal = false,
   disableAction = false,
-  actionHandler = () => { },
+  actionHandler = () => {},
 }) => {
-  const [visible, setVisible] = useState(showModal)
+  const [visible, setVisible] = useState(showModal);
 
   useEffect(() => {
-    setVisible(showModal)
-  }, [showModal])
+    setVisible(showModal);
+  }, [showModal]);
 
   const toggleModal = () => {
-    setVisible(!visible)
-    actionHandler(!visible)
-  }
+    setVisible(!visible);
+    actionHandler(!visible);
+  };
   return (
     <>
       {disableAction ? null : (
@@ -30,12 +30,12 @@ const PopUpModal = ({
       )}
       <motion.div
         className="absolute top-0 left-0 right-0 w-screen z-50 mobile:px-4 flex flex-col justify-center items-center"
-        style={{ backgroundColor: '#25252550', height: visible ? '100vh' : 0 }}
+        style={{ backgroundColor: "#25252550", height: visible ? "100vh" : 0 }}
         initial={{ opacity: 0 }}
         animate={{
           opacity: visible ? 1 : 0,
         }}
-        transition={{ ease: 'easeInOut', type: 'tween' }}
+        transition={{ ease: "easeInOut", type: "tween" }}
       >
         {visible ? (
           <>
@@ -54,8 +54,8 @@ const PopUpModal = ({
         ) : null}
       </motion.div>
     </>
-  )
-}
+  );
+};
 
 PopUpModal.propTypes = {
   action: PropTypes.oneOfType([
@@ -73,6 +73,6 @@ PopUpModal.propTypes = {
   actionHandler: PropTypes.func,
   showModal: PropTypes.bool,
   disableAction: PropTypes.bool,
-}
+};
 
-export default PopUpModal
+export default PopUpModal;
