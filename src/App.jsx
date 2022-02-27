@@ -19,9 +19,6 @@ const App = () => {
     if (localStorage.getItem("gun/")) {
       localStorage.removeItem("gun/");
     }
-    console.log("------------------------")
-    console.log(process.env, "process.env")
-    console.log("------------------------")
   }, []);
   return (
     <div className="w-screen h-screen bg-white text-gray-800 overflow-hidden">
