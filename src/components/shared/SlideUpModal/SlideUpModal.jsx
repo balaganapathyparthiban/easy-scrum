@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import PropTypes from 'prop-types'
-import { VscChromeClose } from 'react-icons/vsc'
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
+import { VscChromeClose } from "react-icons/vsc";
 
 const SlideUpModal = ({
   children,
@@ -10,16 +10,16 @@ const SlideUpModal = ({
   showSlideUpModal = false,
   actionHandler = () => {},
 }) => {
-  const [visible, setVisible] = useState(showSlideUpModal)
+  const [visible, setVisible] = useState(showSlideUpModal);
 
   useEffect(() => {
-    setVisible(showSlideUpModal)
-  }, [showSlideUpModal])
+    setVisible(showSlideUpModal);
+  }, [showSlideUpModal]);
 
   const toggleModal = () => {
-    setVisible(!visible)
-    actionHandler(!visible)
-  }
+    setVisible(!visible);
+    actionHandler(!visible);
+  };
 
   return (
     <>
@@ -28,14 +28,14 @@ const SlideUpModal = ({
       </div>
       <motion.div
         className="w-screen h-screen bg-white text-gray-800 absolute left-0 right-0 z-50 overflow-hidden"
-        initial={{ top: '100vh', height: 0 }}
+        initial={{ top: "100vh", height: 0 }}
         animate={{
-          top: visible ? 0 : '100vh',
-          height: visible ? '100vh' : 0,
+          top: visible ? 0 : "100vh",
+          height: visible ? "100vh" : 0,
         }}
         transition={{
-          ease: 'easeInOut',
-          type: 'tween',
+          ease: "easeInOut",
+          type: "tween",
         }}
       >
         {visible ? (
@@ -51,8 +51,8 @@ const SlideUpModal = ({
         ) : null}
       </motion.div>
     </>
-  )
-}
+  );
+};
 
 SlideUpModal.propTypes = {
   action: PropTypes.oneOfType([
@@ -69,6 +69,6 @@ SlideUpModal.propTypes = {
   ]),
   showSlideUpModal: PropTypes.bool,
   actionHandler: PropTypes.func,
-}
+};
 
-export default SlideUpModal
+export default SlideUpModal;

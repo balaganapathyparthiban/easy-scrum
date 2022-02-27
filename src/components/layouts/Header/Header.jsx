@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import Logo from '../../shared/Logo/Logo'
+import Logo from "../../shared/Logo/Logo";
 
 const Header = () => {
   return (
@@ -9,7 +9,7 @@ const Header = () => {
         <Logo />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

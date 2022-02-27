@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react";
+import PropTypes from "prop-types";
 
 const Input = ({
-  placeholder = '',
-  type = 'text',
+  placeholder = "",
+  type = "text",
   value,
   id,
   onChange,
@@ -24,8 +24,8 @@ const Input = ({
         onChange={onChange}
       />
     </div>
-  )
-}
+  );
+};
 
 Input.propTypes = {
   placeholder: PropTypes.string,
@@ -35,6 +35,6 @@ Input.propTypes = {
   onChange: PropTypes.func,
   className: PropTypes.string,
   style: PropTypes.object,
-}
+};
 
-export default Input
+export default Input;

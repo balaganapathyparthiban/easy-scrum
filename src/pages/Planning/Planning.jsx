@@ -1,85 +1,84 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { FiShare2, FiSettings } from 'react-icons/fi'
-import colors from 'tailwindcss/colors'
-import { v4 as uuidV4 } from 'uuid'
-import { GoCheck } from 'react-icons/go'
-import { VscChevronDown } from 'react-icons/vsc'
-import { FiLogOut } from 'react-icons/fi'
-import { MdRefresh } from 'react-icons/md'
-import { VscEye } from 'react-icons/vsc'
-import { FaUsers, FaVoteYea, FaEye } from 'react-icons/fa'
-import { toast } from 'react-toastify'
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { FiShare2, FiSettings } from "react-icons/fi";
+import colors from "tailwindcss/colors";
+import { v4 as uuidV4 } from "uuid";
+import { GoCheck } from "react-icons/go";
+import { VscChevronDown } from "react-icons/vsc";
+import { FiLogOut } from "react-icons/fi";
+import { MdRefresh } from "react-icons/md";
+import { VscEye } from "react-icons/vsc";
+import { FaUsers, FaVoteYea, FaEye } from "react-icons/fa";
+import { toast } from "react-toastify";
 
-import { db, hash, PLANNING_SCHEMA } from '../../utils/db'
-import CONST from '../../utils/constants'
-import Logo from '../../components/shared/Logo/Logo'
-import Button from '../../components/forms/Button/Button'
-import StartPlanning from '../../components/ui/landing/StartPlanning/StartPlanning'
-import SlideUpModal from '../../components/shared/SlideUpModal/SlideUpModal'
-import PopUpModal from '../../components/shared/PopUpModal/PopUpModal'
-import Input from '../../components/forms/Input/Input'
-import tailwindcssConfig from '../../assets/config/tailwindcss.json'
-
+import { db, hash, PLANNING_SCHEMA } from "../../utils/db";
+import CONST from "../../utils/constants";
+import Logo from "../../components/shared/Logo/Logo";
+import Button from "../../components/forms/Button/Button";
+import StartPlanning from "../../components/ui/landing/StartPlanning/StartPlanning";
+import SlideUpModal from "../../components/shared/SlideUpModal/SlideUpModal";
+import PopUpModal from "../../components/shared/PopUpModal/PopUpModal";
+import Input from "../../components/forms/Input/Input";
+import tailwindcssConfig from "../../assets/config/tailwindcss.json";
 
 const Planning = () => {
-  const { push, location } = useHistory()
+  const { push, location } = useHistory();
 
-  const [planningData, setPlanningData] = useState(PLANNING_SCHEMA)
-  const [users, setUsers] = useState({})
-  const [role, setRole] = useState(CONST.USER)
-  const [showModal, setShowModal] = useState(false)
-  const [userName, setUserName] = useState('')
-  const [isSpectator, setIsSpectator] = useState(false)
-  const [showSlideUpModal, setShowSlideUpModal] = useState(false)
-  const [showDropDown, setShowDropDown] = useState(false)
-  const [isVoted, setIsVoted] = useState(null)
+  const [planningData, setPlanningData] = useState(PLANNING_SCHEMA);
+  const [users, setUsers] = useState({});
+  const [role, setRole] = useState(CONST.USER);
+  const [showModal, setShowModal] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [isSpectator, setIsSpectator] = useState(false);
+  const [showSlideUpModal, setShowSlideUpModal] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [isVoted, setIsVoted] = useState(null);
   const [result, setResult] = useState({
     totalPaticipants: 0,
     totalSpectators: 0,
     totalVotes: 0,
     votingMap: {},
-  })
+  });
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search)
+    const query = new URLSearchParams(location.search);
 
-    if (!query.get('room')) {
-      push(CONST.LANDING)
+    if (!query.get("room")) {
+      push(CONST.LANDING);
     }
 
-    localStorage.setItem(CONST.ROOM_ID, query.get('room'))
+    localStorage.setItem(CONST.ROOM_ID, query.get("room"));
 
     if (!localStorage.getItem(CONST.USER_ID)) {
-      setShowModal(true)
+      setShowModal(true);
     } else {
-      listenPlanningDataChanges()
+      listenPlanningDataChanges();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    let totalPaticipants = 0
-    let totalSpectators = 0
-    let totalVotes = 0
-    let votingMap = {}
+    let totalPaticipants = 0;
+    let totalSpectators = 0;
+    let totalVotes = 0;
+    let votingMap = {};
 
     Object.values(users).forEach((user) => {
       if (!user.isSpectator) {
-        totalPaticipants++
+        totalPaticipants++;
       }
       if (user.isSpectator) {
-        totalSpectators++
+        totalSpectators++;
       }
       if (user.vote !== null) {
-        totalVotes++
+        totalVotes++;
       }
 
       if (!votingMap[user.vote]) {
-        votingMap[user.vote] = 1
+        votingMap[user.vote] = 1;
       } else {
-        votingMap[user.vote]++
+        votingMap[user.vote]++;
       }
-    })
+    });
 
     setResult({
       ...result,
@@ -87,59 +86,59 @@ const Planning = () => {
       totalSpectators,
       totalVotes,
       votingMap,
-    })
-  }, [users])
+    });
+  }, [users]);
 
   const listenPlanningDataChanges = () => {
-    const query = new URLSearchParams(location.search)
+    const query = new URLSearchParams(location.search);
 
-    db.get(query.get('room'))
+    db.get(query.get("room"))
       .map()
       .on(async (response) => {
-        if (!response) return
+        if (!response) return;
 
-        const data = await SEA.decrypt(response, hash)
+        const data = await SEA.decrypt(response, hash);
 
-        setPlanningData(data)
-      })
+        setPlanningData(data);
+      });
 
-    db.get(`${query.get('room')}-users`)
+    db.get(`${query.get("room")}-users`)
       .map()
       .on(async (response) => {
-        if (!response) return
+        if (!response) return;
 
-        const user = await SEA.decrypt(response, hash)
+        const user = await SEA.decrypt(response, hash);
 
         if (user.id === localStorage.getItem(CONST.USER_ID)) {
           if (user.admin) {
-            setRole(CONST.ADMIN)
+            setRole(CONST.ADMIN);
           }
-          setUserName(user.name)
-          setIsSpectator(user.isSpectator)
-          setIsVoted(user.vote)
+          setUserName(user.name);
+          setIsSpectator(user.isSpectator);
+          setIsVoted(user.vote);
         }
 
-        users[user.id] = { ...user }
-        setUsers({ ...users })
-      })
-  }
+        users[user.id] = { ...user };
+        setUsers({ ...users });
+      });
+  };
 
   const joinUserToRoom = async () => {
     if (!userName) {
-      toast.error('Name is required')
-      return
+      toast.error("Name is required");
+      return;
     }
 
-    const query = new URLSearchParams(location.search)
-    const userId = localStorage.getItem(CONST.USER_ID)
+    const query = new URLSearchParams(location.search);
+    const userId = localStorage.getItem(CONST.USER_ID);
 
     if (userId) {
-      users[userId].name = userName
-      users[userId].isSpectator = isSpectator
+      users[userId].name = userName;
+      users[userId].isSpectator = isSpectator;
 
       if (users[userId].isSpectator) {
-        users[userId].vote = null
-        setIsVoted(null)
+        users[userId].vote = null;
+        setIsVoted(null);
       }
 
       const userSecret = await SEA.encrypt(
@@ -147,12 +146,12 @@ const Planning = () => {
           ...users[userId],
         }),
         hash
-      )
+      );
 
-      db.get(`${query.get('room')}-users`).put({ [userId]: userSecret })
-      setShowModal(false)
+      db.get(`${query.get("room")}-users`).put({ [userId]: userSecret });
+      setShowModal(false);
     } else {
-      const id = uuidV4()
+      const id = uuidV4();
       const userSecret = await SEA.encrypt(
         JSON.stringify({
           id,
@@ -161,106 +160,112 @@ const Planning = () => {
           vote: null,
         }),
         hash
-      )
+      );
 
-      db.get(`${query.get('room')}-users`).put({ [id]: userSecret })
-      localStorage.setItem(CONST.USER_ID, id)
+      db.get(`${query.get("room")}-users`).put({ [id]: userSecret });
+      localStorage.setItem(CONST.USER_ID, id);
 
-      listenPlanningDataChanges()
-      setShowModal(false)
+      listenPlanningDataChanges();
+      setShowModal(false);
     }
-  }
+  };
 
   const selectVote = async (voting, index) => {
-    if (planningData.showVoting) return
+    if (planningData.showVoting) return;
 
-    const query = new URLSearchParams(location.search)
-    const userId = localStorage.getItem(CONST.USER_ID)
+    const query = new URLSearchParams(location.search);
+    const userId = localStorage.getItem(CONST.USER_ID);
 
-    users[userId].vote = voting.name
-    setIsVoted(index)
+    users[userId].vote = voting.name;
+    setIsVoted(index);
 
     const userSecret = await SEA.encrypt(
       JSON.stringify({
         ...users[userId],
       }),
       hash
-    )
-    db.get(`${query.get('room')}-users`).put({ [userId]: userSecret })
-  }
+    );
+    db.get(`${query.get("room")}-users`).put({ [userId]: userSecret });
+  };
 
   const onShowVoting = async () => {
-    if (role !== CONST.ADMIN) return
+    if (role !== CONST.ADMIN) return;
 
-    const query = new URLSearchParams(location.search)
-    const userId = localStorage.getItem(CONST.USER_ID)
+    const query = new URLSearchParams(location.search);
+    const userId = localStorage.getItem(CONST.USER_ID);
 
     if (users[userId]?.admin) {
-      planningData.showVoting = true
+      planningData.showVoting = true;
     }
 
-    const planningSecret = await SEA.encrypt(JSON.stringify(planningData), hash)
-    db.get(query.get('room')).put({ data: planningSecret })
-  }
+    const planningSecret = await SEA.encrypt(
+      JSON.stringify(planningData),
+      hash
+    );
+    db.get(query.get("room")).put({ data: planningSecret });
+  };
 
   const onVotingReset = async () => {
-    if (role !== CONST.ADMIN) return
+    if (role !== CONST.ADMIN) return;
 
-    const query = new URLSearchParams(location.search)
-    const userId = localStorage.getItem(CONST.USER_ID)
+    const query = new URLSearchParams(location.search);
+    const userId = localStorage.getItem(CONST.USER_ID);
 
     if (users[userId]?.admin) {
-      planningData.showVoting = false
+      planningData.showVoting = false;
 
       Object.keys(users).forEach(async (key) => {
-        users[key].vote = null
+        users[key].vote = null;
         const userSecret = await SEA.encrypt(
           JSON.stringify({
             ...users[key],
           }),
           hash
-        )
-        db.get(`${query.get('room')}-users`).put({ [key]: userSecret })
-      })
+        );
+        db.get(`${query.get("room")}-users`).put({ [key]: userSecret });
+      });
     }
 
-    const planningSecret = await SEA.encrypt(JSON.stringify(planningData), hash)
-    db.get(query.get('room')).put({ data: planningSecret })
-  }
+    const planningSecret = await SEA.encrypt(
+      JSON.stringify(planningData),
+      hash
+    );
+    db.get(query.get("room")).put({ data: planningSecret });
+  };
 
   const editStartPlanning = async (data) => {
-    if (role !== CONST.ADMIN) return
+    if (role !== CONST.ADMIN) return;
 
-    const query = new URLSearchParams(location.search)
-    const userId = localStorage.getItem(CONST.USER_ID)
+    const query = new URLSearchParams(location.search);
+    const userId = localStorage.getItem(CONST.USER_ID);
 
     if (users[userId].admin) {
-      planningData.planningName = data.planningName
-      planningData.votingSystem = data.votingSystem
+      planningData.planningName = data.planningName;
+      planningData.votingSystem = data.votingSystem;
 
-      const secret = await SEA.encrypt(JSON.stringify(planningData), hash)
-      db.get(query.get('room')).put({ data: secret })
+      const secret = await SEA.encrypt(JSON.stringify(planningData), hash);
+      db.get(query.get("room")).put({ data: secret });
 
-      setShowSlideUpModal(false)
+      setShowSlideUpModal(false);
     }
-  }
+  };
 
   const copyLink = () => {
-    const copyText = document.getElementById('share-url')
-    copyText.select()
-    copyText.setSelectionRange(0, 99999)
-    navigator.clipboard.writeText(copyText.value)
-    toast.info('Link Copied.')
-  }
+    const copyText = document.getElementById("share-url");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+    toast.info("Link Copied.");
+  };
 
   const onLogout = () => {
-    localStorage.removeItem(CONST.USER_ID)
-    localStorage.removeItem(CONST.ROOM_ID)
-    push(CONST.LANDING)
-  }
+    localStorage.removeItem(CONST.USER_ID);
+    localStorage.removeItem(CONST.ROOM_ID);
+    push(CONST.LANDING);
+  };
 
   const isMobile =
-    document.body.offsetWidth <= parseInt(tailwindcssConfig.screens.mobile.max)
+    document.body.offsetWidth <= parseInt(tailwindcssConfig.screens.mobile.max);
 
   return (
     <>
@@ -278,10 +283,13 @@ const Planning = () => {
             <SlideUpModal
               showSlideUpModal={showSlideUpModal}
               action={
-                <FiSettings fontSize="24" className="mobile:text-xl ml-4 text-gray-800" />
+                <FiSettings
+                  fontSize="24"
+                  className="mobile:text-xl ml-4 text-gray-800"
+                />
               }
               actionHandler={(data) => {
-                setShowSlideUpModal(data)
+                setShowSlideUpModal(data);
               }}
               header={<Logo color="blue" colorWeight="400" />}
             >
@@ -306,7 +314,9 @@ const Planning = () => {
               <p className="uppercase text-sm rounded-full bg-blue-400 w-7 h-7 flex flex-row justify-center items-center mr-2 text-white">
                 {userName[0]}
               </p>
-              <p className="cursor-pointer mr-2 capitalize mobile:hidden">{userName}</p>
+              <p className="cursor-pointer mr-2 capitalize mobile:hidden">
+                {userName}
+              </p>
               <VscChevronDown className="cursor-pointer" strokeWidth={2} />
               {showDropDown ? (
                 <>
@@ -349,7 +359,7 @@ const Planning = () => {
             />
             <Button bgColor="blue" bgColorWeight="400" textColor="white">
               <FiShare2 fontSize="20" className="text-base mr-2 relative" />
-              <span className='mobile:text-xs'>Copy link</span>
+              <span className="mobile:text-xs">Copy link</span>
             </Button>
           </div>
         </div>
@@ -358,20 +368,20 @@ const Planning = () => {
         <div className="w-3/4 mobile:w-full h-full mobile:h-3/4 mobile:mt-2 flex flex-col justify-between">
           <div
             className="w-full h-3/4 mobile:h-4/5 grid grid-cols-4 mobile:grid-cols-2 tablet:grid-cols-3 gap-4 mobile:gap-1 border-2 border-blue-400 rounded shadow p-2 overflow-x-hidden overflow-y-scroll relative"
-            style={{ gridAutoRows: '100px' }}
+            style={{ gridAutoRows: "100px" }}
           >
             {Object.keys(users).length > 0 ? (
               Object.values(users).map((user, index) => (
                 <div
-                  key={[index].join('_')}
+                  key={[index].join("_")}
                   className="w-auto h-16 border rounded shadow flex flex-row relative"
                 >
                   <div
                     className="w-1/5 mobile:w-1/4 flex flex-row justify-center items-center rounded m-px"
                     style={{
                       background: user.vote
-                        ? colors['blue']['400']
-                        : colors['gray']['200'],
+                        ? colors["blue"]["400"]
+                        : colors["gray"]["200"],
                     }}
                   >
                     <p className="font-bold text-3xl mobile:text-lg text-white break-words">
@@ -381,7 +391,7 @@ const Planning = () => {
                   <div className="w-4/5 mobile:w-3/4 flex flex-col p-2">
                     <p className="capitalize mobile:text-xs">{user.name}</p>
                     <p className="opacity-50 text-sm mobile:text-xs">
-                      {user.isSpectator ? 'Spectator' : 'Participant'}
+                      {user.isSpectator ? "Spectator" : "Participant"}
                     </p>
                   </div>
                 </div>
@@ -396,16 +406,16 @@ const Planning = () => {
             {isSpectator ? (
               <div
                 className="rounded z-10 absolute top-4 left-0 right-0 w-full opacity-80 bg-gray-200 flex flex-row justify-center items-center"
-                style={{ height: '90%' }}
+                style={{ height: "90%" }}
               >
                 <p className="font-bold mobile:text-sm mobile:text-center">
-                  You are in spectator mode,{' '}
+                  You are in spectator mode,{" "}
                   <span
                     className="cursor-pointer text-blue-400"
                     onClick={() => setShowModal(true)}
                   >
                     Click here
-                  </span>{' '}
+                  </span>{" "}
                   to change the mode.
                 </p>
               </div>
@@ -418,15 +428,15 @@ const Planning = () => {
                   style={
                     isVoted === v.name
                       ? {
-                        transform: 'translateY(-0.5rem)',
-                        background: colors['blue']['50'],
-                      }
-                      : planningData.showVoting
-                        ? {
-                          transform: 'translateY(0)',
-                          background: 'transparent',
+                          transform: "translateY(-0.5rem)",
+                          background: colors["blue"]["50"],
                         }
-                        : {}
+                      : planningData.showVoting
+                      ? {
+                          transform: "translateY(0)",
+                          background: "transparent",
+                        }
+                      : {}
                   }
                   onClick={() => selectVote(v)}
                 >
@@ -446,10 +456,14 @@ const Planning = () => {
                   onClick={onVotingReset}
                   fullWidth={true}
                   fullHeight={isMobile}
-                  className='mobile:text-xs tablet:text-sm'
+                  className="mobile:text-xs tablet:text-sm"
                 >
-                  <MdRefresh className="mr-2" fontSize={16} className="mobile:text-2xl" />
-                  <span className='mobile:hidden'>Reset</span>
+                  <MdRefresh
+                    className="mr-2"
+                    fontSize={16}
+                    className="mobile:text-2xl"
+                  />
+                  <span className="mobile:hidden">Reset</span>
                 </Button>
               </div>
               <div className="w-1/2 mobile:h-1/2 ml-2 mobile:ml-0 mobile:mt-2 tablet:ml-1 mobile:w-1/2">
@@ -460,10 +474,14 @@ const Planning = () => {
                   onClick={onShowVoting}
                   fullWidth={true}
                   fullHeight={isMobile}
-                  className='mobile:text-xs tablet:text-sm'
+                  className="mobile:text-xs tablet:text-sm"
                 >
-                  <VscEye className="mr-2" fontSize={16} className="mobile:text-2xl" />
-                  <span className='mobile:hidden'>Show</span>
+                  <VscEye
+                    className="mr-2"
+                    fontSize={16}
+                    className="mobile:text-2xl"
+                  />
+                  <span className="mobile:hidden">Show</span>
                 </Button>
               </div>
             </div>
@@ -472,75 +490,96 @@ const Planning = () => {
             <div className="flex flex-row justify-between">
               <div className="w-1/3 h-auto flex flex-col justify-center items-center">
                 <div>
-                  <FaUsers fontSize={20} className='mobile:text-lg tablet:text-lg' />
+                  <FaUsers
+                    fontSize={20}
+                    className="mobile:text-lg tablet:text-lg"
+                  />
                 </div>
                 <div>
-                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">{result.totalPaticipants}</p>
+                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">
+                    {result.totalPaticipants}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs tablet:text-[10px] opacity-50">Participant's</p>
-                </div>
-              </div>
-              <div className="w-1/3 h-auto flex flex-col justify-center items-center">
-                <div>
-                  <FaEye fontSize={20} className='mobile:text-lg tablet:text-lg' />
-                </div>
-                <div>
-                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">{result.totalSpectators}</p>
-                </div>
-                <div>
-                  <p className="text-xs tablet:text-[10px] opacity-50">Spectator's</p>
+                  <p className="text-xs tablet:text-[10px] opacity-50">
+                    Participant's
+                  </p>
                 </div>
               </div>
               <div className="w-1/3 h-auto flex flex-col justify-center items-center">
                 <div>
-                  <FaVoteYea fontSize={20} className='mobile:text-lg tablet:text-lg' />
+                  <FaEye
+                    fontSize={20}
+                    className="mobile:text-lg tablet:text-lg"
+                  />
                 </div>
                 <div>
-                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">{result.totalVotes}</p>
+                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">
+                    {result.totalSpectators}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs tablet:text-[10px] opacity-50">Vote's</p>
+                  <p className="text-xs tablet:text-[10px] opacity-50">
+                    Spectator's
+                  </p>
+                </div>
+              </div>
+              <div className="w-1/3 h-auto flex flex-col justify-center items-center">
+                <div>
+                  <FaVoteYea
+                    fontSize={20}
+                    className="mobile:text-lg tablet:text-lg"
+                  />
+                </div>
+                <div>
+                  <p className="text-xl mobile:text-sm tablet:text-sm font-bold">
+                    {result.totalVotes}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs tablet:text-[10px] opacity-50">
+                    Vote's
+                  </p>
                 </div>
               </div>
             </div>
             {result.votingMap && planningData.showVoting
               ? Object.keys(result.votingMap)
-                .sort((a, b) => {
-                  if (parseFloat(a) > parseFloat(b)) return 1
-                  if (parseFloat(a) < parseFloat(b)) return -1
-                  if (parseFloat(a) == parseFloat(b)) {
-                    return 0
-                  }
-                })
-                .map((voting) => (
-                  <div
-                    key={voting}
-                    className="flex flex-row items-center justify-evenly mt-4 mobile:mt-2"
-                  >
-                    {voting !== 'null' ? (
-                      <>
-                        <div className="w-8 h-10 border-2 border-blue-400 rounded flex flex-row justify-center items-center">
-                          <p className="text-blue-400">
-                            {voting}
-                          </p>
-                        </div>
-                        <div
-                          className="w-4/5 h-2 ml-2 bg-gray-200 rounded"
-                          style={{
-                            background: `linear-gradient(90deg, ${colors['blue']['400']
-                              } 0% ${(result.votingMap[voting] /
-                                (result.totalVotes === 0
-                                  ? 1
-                                  : result.totalVotes)) *
-                              100
-                              }%, ${colors['gray']['200']} 0% 100%)`,
-                          }}
-                        ></div>
-                      </>
-                    ) : null}
-                  </div>
-                ))
+                  .sort((a, b) => {
+                    if (parseFloat(a) > parseFloat(b)) return 1;
+                    if (parseFloat(a) < parseFloat(b)) return -1;
+                    if (parseFloat(a) == parseFloat(b)) {
+                      return 0;
+                    }
+                  })
+                  .map((voting) => (
+                    <div
+                      key={voting}
+                      className="flex flex-row items-center justify-evenly mt-4 mobile:mt-2"
+                    >
+                      {voting !== "null" ? (
+                        <>
+                          <div className="w-8 h-10 border-2 border-blue-400 rounded flex flex-row justify-center items-center">
+                            <p className="text-blue-400">{voting}</p>
+                          </div>
+                          <div
+                            className="w-4/5 h-2 ml-2 bg-gray-200 rounded"
+                            style={{
+                              background: `linear-gradient(90deg, ${
+                                colors["blue"]["400"]
+                              } 0% ${
+                                (result.votingMap[voting] /
+                                  (result.totalVotes === 0
+                                    ? 1
+                                    : result.totalVotes)) *
+                                100
+                              }%, ${colors["gray"]["200"]} 0% 100%)`,
+                            }}
+                          ></div>
+                        </>
+                      ) : null}
+                    </div>
+                  ))
               : null}
           </div>
         </div>
@@ -551,11 +590,11 @@ const Planning = () => {
         header="Personal Details"
         actionHandler={(status) => {
           if (!localStorage.getItem(CONST.USER_ID)) {
-            push(CONST.LANDING)
-            return
+            push(CONST.LANDING);
+            return;
           } else {
-            setUserName(users[localStorage.getItem(CONST.USER_ID)]?.name)
-            setShowModal(false)
+            setUserName(users[localStorage.getItem(CONST.USER_ID)]?.name);
+            setShowModal(false);
           }
         }}
       >
@@ -601,7 +640,7 @@ const Planning = () => {
         </div>
       </PopUpModal>
     </>
-  )
-}
+  );
+};
 
-export default Planning
+export default Planning;

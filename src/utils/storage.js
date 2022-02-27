@@ -1,30 +1,30 @@
-const storageUtil = {}
+const storageUtil = {};
 
 storageUtil.get = (key) => {
   try {
-    const data = window.localStorage.getItem(key)
-    return data
+    const data = window.localStorage.getItem(key);
+    return data;
   } catch {
-    return null
+    return null;
   }
-}
+};
 
 storageUtil.set = (key, value) => {
   try {
-    window.localStorage.setItem(key, value)
-    return true
+    window.localStorage.setItem(key, value);
+    return true;
   } catch {
-    return false
+    return false;
   }
-}
+};
 
 storageUtil.remove = (key) => {
   try {
-    window.localStorage.removeItem(key)
-    return true
+    window.localStorage.removeItem(key);
+    return true;
   } catch {
-    return false
+    return false;
   }
-}
+};
 
-export default storageUtil
+export default storageUtil;
