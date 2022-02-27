@@ -2,6 +2,8 @@ import colors from "tailwindcss/colors";
 import GUN from "gun";
 import "gun/sea";
 
+console.log(import.meta.env);
+
 export const db = GUN([
   import.meta.env.VITE_GUN_PEER_1,
   import.meta.env.VITE_GUN_PEER_2,
