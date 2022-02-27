@@ -1,20 +1,20 @@
 import React from "react";
+import { AiOutlineInfoCircle, AiOutlineCode } from 'react-icons/ai'
 
 import Logo from "../../shared/Logo/Logo";
 import SlideUpModal from "../../shared/SlideUpModal/SlideUpModal";
 
 const Footer = () => {
   return (
-    <div className="w-full h-16 mobile:h-auto flex flex-row items-center justify-between px-10 mobile:px-4 mobile:py-2 text-lg mobile:text-sm tablet:text-base">
-      <div className="flex flex-row items-center">
-        <p>Open Source</p>
-        <a href="">
-          <p className="ml-4">Github</p>
-        </a>
-      </div>
+    <div className="w-full h-full mobile:h-auto flex flex-row mobile:flex-col items-center justify-between px-10 mobile:px-4 mobile:py-2 text-lg mobile:text-sm tablet:text-base">
       <div className="flex flex-row items-center">
         <SlideUpModal
-          action={<p className="mr-2 mobile:mr-2">About</p>}
+          action={
+            <div className="mr-2 mobile:mr-2 flex items-center">
+              <AiOutlineInfoCircle className="text-lg" />
+              <span className="pl-1">About</span>
+            </div>
+          }
           header={<Logo color="black" colorWeight="400" logoTitle="About" />}
         >
           <div className="pb-12 px-6 w-full font-thin h-full overflow-y-scroll overflow-x-hidden">
@@ -46,7 +46,18 @@ const Footer = () => {
             </div>
           </div>
         </SlideUpModal>
-        <p className="ml-2 font-medium">@bginnovate</p>
+        <a href="https://github.com/balaganapathyparthiban/easy-scrum" target="_blank">
+          <div className="ml-4 flex items-center">
+            <AiOutlineCode className="text-xl" />
+            <span className="pl-1">Source code</span>
+          </div>
+        </a>
+      </div>
+      <div className="flex flex-row items-center mobile:text-xs">
+        <p>Open Source</p>
+        <a href="https://bginnovate.com" target="_blank">
+          <p className="ml-2 font-medium">@bginnovate</p>
+        </a>
       </div>
     </div>
   );

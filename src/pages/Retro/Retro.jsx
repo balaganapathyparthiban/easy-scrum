@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { FiLogOut, FiSettings, FiShare2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { VscChevronDown, VscEye } from "react-icons/vsc";
+import { VscChevronDown } from "react-icons/vsc";
+import { BiExport } from 'react-icons/bi'
 import { v4 as uuidV4 } from "uuid";
+import { CSVLink } from "react-csv";
 
 import { db, hash, RETRO_SCHEMA } from "../../utils/db";
 import Button from "../../components/forms/Button/Button";
@@ -28,6 +30,7 @@ const Retro = () => {
   const [userName, setUserName] = useState("");
   const [showDropDown, setShowDropDown] = useState(false);
   const [showSlideUpModal, setShowSlideUpModal] = useState(false);
+  const [csvData, setCSVData] = useState({ data: [], headers: [] })
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -41,11 +44,11 @@ const Retro = () => {
     if (!localStorage.getItem(CONST.USER_ID)) {
       setShowModal(true);
     } else {
-      listenPlanningDataChanges();
+      listenRetroDataChanges();
     }
   }, []);
 
-  const listenPlanningDataChanges = () => {
+  const listenRetroDataChanges = () => {
     const query = new URLSearchParams(location.search);
 
     db.get(query.get("room"))
@@ -100,7 +103,14 @@ const Retro = () => {
         } else {
           tempTemplates[template.index].list[ttIndex] = { ...template.value };
         }
-        setTempTemplates([...tempTemplates]);
+
+        const ttArray = [...tempTemplates].map(d => {
+          d.list = d.list.filter(dl => dl)
+          return d
+        })
+
+        updateCSVData(ttArray)
+        setTempTemplates(ttArray);
       });
   };
 
@@ -138,7 +148,7 @@ const Retro = () => {
       db.get(`${query.get("room")}-users`).put({ [id]: userSecret });
       localStorage.setItem(CONST.USER_ID, id);
 
-      listenPlanningDataChanges();
+      listenRetroDataChanges();
       setShowModal(false);
     }
   };
@@ -150,6 +160,7 @@ const Retro = () => {
       likes: 0,
       status: CONST.RETRO_STATUS_EDIT,
     });
+    updateCSVData(tempArr)
     setTempTemplates(tempArr);
   };
 
@@ -199,6 +210,7 @@ const Retro = () => {
 
     delete inputValues[`value${index}${tlIndex}`];
     delete tempTemplates[index].list[tlIndex];
+    updateCSVData(tempTemplates)
     setTempTemplates([...tempTemplates]);
   };
 
@@ -228,6 +240,7 @@ const Retro = () => {
     inputValues[`value${index}${tlIndex}`] =
       tempArr[index].list[tlIndex].message;
     tempArr[index].list[tlIndex].status = CONST.RETRO_STATUS_EDIT;
+    updateCSVData(tempArr)
     setTempTemplates(tempArr);
   };
 
@@ -235,12 +248,14 @@ const Retro = () => {
     const tempArr = [...tempTemplates];
     inputValues[`value${index}${tlIndex}`] = "";
     tempArr[index].list[tlIndex].status = CONST.RETRO_STATUS_NONE;
+    updateCSVData(tempArr)
     setTempTemplates(tempArr);
   };
 
   const cancelTemplateList = (index, tlIndex) => {
     const tempArr = [...tempTemplates];
     delete tempArr[index].list[tlIndex];
+    updateCSVData(tempArr)
     setTempTemplates(tempArr);
   };
 
@@ -294,6 +309,29 @@ const Retro = () => {
     localStorage.removeItem(CONST.ROOM_ID);
     push(CONST.LANDING);
   };
+
+  const updateCSVData = (ttArray = []) => {
+    ttArray = [...ttArray].map(d => {
+      d.list = d.list.filter(dl => dl)
+      return d
+    })
+    const csvHeaders = ttArray.map(tt => ({ label: tt.name, key: tt.name.toLowerCase().replaceAll(" ", "_") }))
+    const csvData = []
+
+    ttArray.forEach(tt => {
+      tt.list.forEach((ttl, index) => {
+        if (csvData[index]) {
+          csvData[index][tt.name.toLowerCase().replaceAll(" ", "_")] = ttl.message
+        } else {
+          const tempObj = { [csvHeaders[0].key]: "", [csvHeaders[1].key]: "", [csvHeaders[2].key]: "" }
+          tempObj[tt.name.toLowerCase().replaceAll(" ", "_")] = ttl.message
+          csvData.push(tempObj)
+        }
+      })
+    })
+
+    setCSVData({ data: csvData, headers: csvHeaders })
+  }
 
   return (
     <>
@@ -387,9 +425,18 @@ const Retro = () => {
               readOnly
             />
             <Button bgColor="yellow" bgColorWeight="400" textColor="white">
-              <FiShare2 fontSize="20" className="text-base mr-2 relative" />
-              <span className="mobile:text-xs">Copy link</span>
+              <FiShare2 fontSize="20" className="text-base mr-2 relative mobile:mr-0" />
+              <span className="mobile:hidden">Copy link</span>
             </Button>
+          </div>
+          <div className="ml-2">
+            <CSVLink data={csvData.data} header={csvData.headers} filename={`retro-${new Date().toLocaleDateString()}.csv`}>
+              <Button bgColor="gray" bgColorWeight="400" textColor="white">
+                <BiExport fontSize="20" className="text-base mr-2 relative mobile:mr-0" />
+                <span className="mobile:hidden">Export .csv</span>
+                <span className="hidden mobile:inline text-xs ml-1">.csv</span>
+              </Button>
+            </CSVLink>
           </div>
         </div>
       </div>
@@ -445,7 +492,7 @@ const Retro = () => {
             <Input
               id="scrumMasterName"
               className="h-12"
-              placeholder="Enter planning name"
+              placeholder="Enter name"
               value={userName}
               onChange={(event) => setUserName(event.target.value)}
             />

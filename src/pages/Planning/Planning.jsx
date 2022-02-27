@@ -428,15 +428,15 @@ const Planning = () => {
                   style={
                     isVoted === v.name
                       ? {
-                          transform: "translateY(-0.5rem)",
-                          background: colors["blue"]["50"],
-                        }
+                        transform: "translateY(-0.5rem)",
+                        background: colors["blue"]["50"],
+                      }
                       : planningData.showVoting
-                      ? {
+                        ? {
                           transform: "translateY(0)",
                           background: "transparent",
                         }
-                      : {}
+                        : {}
                   }
                   onClick={() => selectVote(v)}
                 >
@@ -545,41 +545,39 @@ const Planning = () => {
             </div>
             {result.votingMap && planningData.showVoting
               ? Object.keys(result.votingMap)
-                  .sort((a, b) => {
-                    if (parseFloat(a) > parseFloat(b)) return 1;
-                    if (parseFloat(a) < parseFloat(b)) return -1;
-                    if (parseFloat(a) == parseFloat(b)) {
-                      return 0;
-                    }
-                  })
-                  .map((voting) => (
-                    <div
-                      key={voting}
-                      className="flex flex-row items-center justify-evenly mt-4 mobile:mt-2"
-                    >
-                      {voting !== "null" ? (
-                        <>
-                          <div className="w-8 h-10 border-2 border-blue-400 rounded flex flex-row justify-center items-center">
-                            <p className="text-blue-400">{voting}</p>
-                          </div>
-                          <div
-                            className="w-4/5 h-2 ml-2 bg-gray-200 rounded"
-                            style={{
-                              background: `linear-gradient(90deg, ${
-                                colors["blue"]["400"]
-                              } 0% ${
-                                (result.votingMap[voting] /
-                                  (result.totalVotes === 0
-                                    ? 1
-                                    : result.totalVotes)) *
-                                100
+                .sort((a, b) => {
+                  if (parseFloat(a) > parseFloat(b)) return 1;
+                  if (parseFloat(a) < parseFloat(b)) return -1;
+                  if (parseFloat(a) == parseFloat(b)) {
+                    return 0;
+                  }
+                })
+                .map((voting) => (
+                  <div
+                    key={voting}
+                    className="flex flex-row items-center justify-evenly mt-4 mobile:mt-2"
+                  >
+                    {voting !== "null" ? (
+                      <>
+                        <div className="w-8 h-10 border-2 border-blue-400 rounded flex flex-row justify-center items-center">
+                          <p className="text-blue-400">{voting}</p>
+                        </div>
+                        <div
+                          className="w-4/5 h-2 ml-2 bg-gray-200 rounded"
+                          style={{
+                            background: `linear-gradient(90deg, ${colors["blue"]["400"]
+                              } 0% ${(result.votingMap[voting] /
+                                (result.totalVotes === 0
+                                  ? 1
+                                  : result.totalVotes)) *
+                              100
                               }%, ${colors["gray"]["200"]} 0% 100%)`,
-                            }}
-                          ></div>
-                        </>
-                      ) : null}
-                    </div>
-                  ))
+                          }}
+                        ></div>
+                      </>
+                    ) : null}
+                  </div>
+                ))
               : null}
           </div>
         </div>
@@ -606,7 +604,7 @@ const Planning = () => {
             <Input
               id="scrumMasterName"
               className="h-12"
-              placeholder="Enter planning name"
+              placeholder="Enter name"
               value={userName}
               onChange={(event) => setUserName(event.target.value)}
             />

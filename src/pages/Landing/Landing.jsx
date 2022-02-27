@@ -107,7 +107,7 @@ const Landing = () => {
           </div>
         </motion.div>
       </div>
-      <div className="w-full h-auto z-10 fixed bottom-0 ">
+      <div className="w-full h-auto z-10 pb-4 mobile:pb-0">
         <Footer />
       </div>
     </div>
