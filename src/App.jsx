@@ -21,7 +21,6 @@ const App = () => {
     }
     console.log("------------------------")
     console.log(process.env, "process.env")
-    console.log(import.meta.env, "import.meta.env")
     console.log("------------------------")
   }, []);
   return (

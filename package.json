@@ -8,6 +8,7 @@
     "lint": "eslint fix ."
   },
   "dependencies": {
+    "env-cmd": "^10.1.0",
     "framer-motion": "^4.1.17",
     "gun": "^0.2020.1235",
     "react": "^17.0.0",
